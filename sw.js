@@ -9,25 +9,33 @@
     const ejectDomain = 'www.elysia-13th.love'
 
 
-    /** 控制信息读写操作 */
-    const dbVersion = {
-        write: (id) => caches.open(CACHE_NAME)
-            .then(cache => cache.put(CTRL_PATH, new Response(JSON.stringify(id)))),
-        read: () => caches.match(CTRL_PATH).then(response => response?.json())
-    }
+    /**
+     * 读取本地版本号
+     * @return {Promise<BrowserVersion|undefined>}
+     */
+    const readVersion = () => caches.match(CTRL_PATH).then(response => response?.json())
+    /**
+     * 写入版本号
+     * @param version {BrowserVersion}
+     * @return {Promise<void>}
+     */
+    const writeVersion = version => caches.open(CACHE_NAME)
+        .then(cache => cache.put(CTRL_PATH, new Response(JSON.stringify(version))))
 
     self.addEventListener('install', () => {
         self.skipWaiting()
         const escape = 0
         if (escape) {
-            dbVersion.read().then(oldVersion => {
+            readVersion().then(async oldVersion => {
+                // noinspection JSIncompatibleTypesComparison
                 if (oldVersion && oldVersion.escape !== escape) {
+                    // noinspection JSValidateTypes
                     oldVersion.escape = escape
-                    dbVersion.write(oldVersion)
-                    // noinspection JSUnresolvedVariable
-                    caches.delete(CACHE_NAME)
-                        .then(() => clients.matchAll())
-                        .then(list => list.forEach(client => client.postMessage({type: 'escape'})))
+                    await caches.delete(CACHE_NAME)
+                    await writeVersion(oldVersion)
+                    // noinspection JSUnresolvedReference
+                    const list = await clients.matchAll()
+                    list.forEach(client => client.postMessage({type: 'escape'}))
                 }
             })
         }
@@ -71,24 +79,18 @@ let getSpareUrls = srcUrl => {
   }
 }
 const fetchFile = (request, banCache, spare = null) => {
-        const fetchArgs = {
-            cache: banCache ? 'no-store' : 'default',
-            mode: 'cors',
-            credentials: 'same-origin'
-        }
         if (!spare) {
             spare = getSpareUrls(request.url)
-            if (!spare) return fetch(request, fetchArgs)
+            if (!spare) return fetchWithCors(request, banCache)
         }
         const list = spare.list
         const controllers = new Array(list.length)
         // noinspection JSCheckFunctionSignatures
         const startFetch =
-            index => fetch(
+            index => fetchWithCors(
                 new Request(list[index], request),
-                Object.assign({
-                    signal: (controllers[index] = new AbortController()).signal
-                }, fetchArgs)
+                banCache,
+                {signal: (controllers[index] = new AbortController()).signal}
             ).then(response => checkResponse(response) ? {r: response, i: index} : Promise.reject())
         return new Promise((resolve, reject) => {
             let flag = true
@@ -160,6 +162,7 @@ const fetchFile = (request, banCache, spare = null) => {
         // [blockRequest call]
         if (request.method !== 'GET' || !request.url.startsWith('http')) return
         // [modifyRequest call]
+        if (skipRequest?.(request)) return
         let cacheKey = url.hostname + url.pathname + url.search
         let cache = cacheMap.get(cacheKey)
         if (cache) {
@@ -171,8 +174,8 @@ const fetchFile = (request, banCache, spare = null) => {
         }
         cacheMap.set(cacheKey, cache = [])
         /** 处理拉取 */
-        const handleFetch = promise =>
-            event.respondWith(promise.then(response => {
+        const handleFetch = promise => event.respondWith(
+            promise.then(response => {
                 for (let item of cache) {
                     item.s(response.clone())
                 }
@@ -183,7 +186,8 @@ const fetchFile = (request, banCache, spare = null) => {
             }).then(() => {
                 cacheMap.delete(cacheKey)
                 return promise
-            }))
+            })
+        )
         const cacheRule = findCache(url)
         if (cacheRule) {
             let key = `https://${url.host}${url.pathname}`
@@ -206,23 +210,35 @@ const fetchFile = (request, banCache, spare = null) => {
             const spare = getSpareUrls(request.url)
             if (spare) handleFetch(fetchFile(request, false, spare))
             // [modifyRequest else-if]
-            else handleFetch(fetch(request).catch(err => new Response(err, {status: 499})))
+            else handleFetch(fetchWithCors(request, false).catch(err => new Response(err, {status: 499})))
         }
     })
 
     self.addEventListener('message', event => {
         // [debug message]
         if (event.data === 'update')
-            updateJson().then(info =>
-                // noinspection JSUnresolvedVariable
-                event.source.postMessage({
-                    type: 'update',
-                    update: info.list,
-                    version: info.version,
-                    old: info.old
-                })
+            updateJson().then(info => {
+                    info.type = 'update'
+                    event.source.postMessage(info)
+                }
             )
     })
+
+    /**
+     * 添加 cors 配置请求指定资源
+     * @param request {Request|string}
+     * @param banCache {boolean} 是否禁用 HTTP 缓存
+     * @param optional {RequestInit?} 额外的配置项
+     * @return {Promise<Response>}
+     */
+    const fetchWithCors = (request, banCache, optional) => fetch(
+        request,
+        Object.assign({
+            cache: optional ? "no-store" : "default",
+            mode: 'cors',
+            credentials: 'same-origin'
+        }, optional || {})
+    )
 
     /**
      * 判断指定 url 击中了哪一种缓存，都没有击中则返回 null
@@ -238,9 +254,9 @@ const fetchFile = (request, banCache, spare = null) => {
 
     /**
      * 根据JSON删除缓存
-     * @returns {Promise<{version, list, old}>}
+     * @returns {Promise<UpdateInfo>}
      */
-    const updateJson = () => {
+    const updateJson = async () => {
         /**
          * 解析elements，并把结果输出到list中
          * @return boolean 是否刷新全站缓存
@@ -259,42 +275,45 @@ const fetchFile = (request, banCache, spare = null) => {
         }
         /**
          * 解析字符串
-         * @return {Promise<any>}
+         * @return {Promise<{
+         *     list?: VersionList,
+         *     new: BrowserVersion,
+         *     old: BrowserVersion
+         * }>}
          */
-        const parseJson = json => dbVersion.read().then(oldVersion => {
+        const parseJson = json => readVersion().then(oldVersion => {
             const {info, global} = json
+            /** @type {BrowserVersion} */
             const newVersion = {global, local: info[0].version, escape: oldVersion?.escape ?? 0}
-            //新用户不进行更新操作
+            // 新用户和刚进行过逃逸操作的用户不进行更新操作
             if (!oldVersion) {
-                dbVersion.write(newVersion)
-                return {version: newVersion, old: oldVersion}
+                // noinspection JSValidateTypes
+                newVersion.escape = 0
+                writeVersion(newVersion)
+                return {new: newVersion, old: oldVersion}
             }
             let list = new VersionList()
             let refresh = parseChange(list, info, oldVersion.local)
-            dbVersion.write(newVersion)
+            writeVersion(newVersion)
             // [debug escape]
-            //如果需要清理全站
+            // 如果需要清理全站
             if (refresh) {
                 if (global !== oldVersion.global) list.force = true
                 else list.refresh = true
             }
-            return {list, version: newVersion, old: oldVersion}
+            return {list, new: newVersion, old: oldVersion}
         })
-        return fetchFile(new Request('/update.json'), false)
-            .then(response => {
-                if (checkResponse(response))
-                    return response.json().then(json =>
-                        parseJson(json).then(result => {
-                            const info = {version: result.version, old: result.old}
-                            if (result.list)
-                                return deleteCache(result.list)
-                                    .then(list => list.length === 0 ? null : list)
-                                    .then(list => Object.assign({list}, info))
-                            else return info
-                        })
-                    )
-                else throw `加载 update.json 时遇到异常，状态码：${response.status}`
-            })
+        const response = await fetchFile(new Request('/update.json'), false)
+        if (!checkResponse(response))
+            throw `加载 update.json 时遇到异常，状态码：${response.status}`
+        const json = await response.json()
+        const result = await parseJson(json)
+        if (result.list) {
+            const list = await deleteCache(result.list)
+            result.list = list?.length ? list : null
+        }
+        // noinspection JSValidateTypes
+        return result
     }
 
     /**
