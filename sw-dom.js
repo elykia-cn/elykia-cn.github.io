@@ -19,9 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     const SESSION_KEY = 'updated'
-    if (sessionStorage.getItem(SESSION_KEY)) {
-        sessionStorage.removeItem(SESSION_KEY);
-        (() => {
+    // noinspection JSFileReferences
+    const onSuccess = () => {
       caches.match('https://id.v3/').then(function(response) {
         if (response) {
           // 如果找到了匹配的缓存响应
@@ -34,24 +33,26 @@ document.addEventListener('DOMContentLoaded', () => {
       }).catch(function(error) {
         console.error('缓存匹配出错:', error);
       });
-    })()
+    };
+    if (sessionStorage.getItem(SESSION_KEY)) {
+        onSuccess()
+        sessionStorage.removeItem(SESSION_KEY)
     } else postMessage2SW('update')
     navigator.serviceWorker.addEventListener('message', event => {
-        sessionStorage.setItem(SESSION_KEY, '1')
         const data = event.data
-        switch (data.type) {
-            case 'update':
-                const list = data.list
-                // noinspection JSUnresolvedVariable,JSUnresolvedFunction
-                if (list && window.Pjax?.isSupported()) {
-                    list.filter(url => /\.(js|css)$/.test(url))
-                        .forEach(pjaxUpdate)
-                }
-                location.reload()
-                break
-            case 'escape':
-                location.reload()
-                break
+        sessionStorage.setItem(SESSION_KEY, data.type)
+        const list = data.list?.filter(url => /\.(js|css)$/.test(url))
+        if (list) {
+            // noinspection JSUnresolvedReference
+            if (window.Pjax?.isSupported?.())
+                list.forEach(pjaxUpdate)
+            location.reload()
+        } else {
+            const newVersion = data.new, oldVersion = data.old
+            if (oldVersion && (newVersion.global !== oldVersion.global || newVersion.local !== oldVersion.local)) {
+                onSuccess()
+            }
+            sessionStorage.removeItem(SESSION_KEY)
         }
     })
 })

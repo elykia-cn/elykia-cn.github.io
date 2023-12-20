@@ -6,7 +6,7 @@
     /** 控制信息存储地址（必须以`/`结尾） */
     const CTRL_PATH = 'https://id.v3/'
 
-    const ejectDomain = 'www.elysia-13th.love'
+    const ejectDomain = 'www.elf-elysia.love'
 
 
     /**
@@ -29,13 +29,16 @@
             readVersion().then(async oldVersion => {
                 // noinspection JSIncompatibleTypesComparison
                 if (oldVersion && oldVersion.escape !== escape) {
-                    // noinspection JSValidateTypes
-                    oldVersion.escape = escape
+                    const list = await caches.open(CACHE_NAME)
+                        .then(cache => cache.keys())
+                        .then(keys => keys?.map(it => it.url))
                     await caches.delete(CACHE_NAME)
-                    await writeVersion(oldVersion)
+                    const info = await updateJson()
+                    info.type = 'escape'
+                    info.list = list
                     // noinspection JSUnresolvedReference
-                    const list = await clients.matchAll()
-                    list.forEach(client => client.postMessage({type: 'escape'}))
+                    const clientList = await clients.matchAll()
+                    clientList.forEach(client => client.postMessage(info))
                 }
             })
         }
@@ -78,16 +81,17 @@ let getSpareUrls = srcUrl => {
     };
   }
 }
-const fetchFile = (request, banCache, spare = null) => {
-        if (!spare) {
-            spare = getSpareUrls(request.url)
-            if (!spare) return fetchWithCors(request, banCache)
+let isCors = () => false
+let isMemoryQueue = () => false
+const fetchFile = (request, banCache, urls = null) => {
+        if (!urls) {
+            urls = getSpareUrls(request.url)
+            if (!urls) return fetchWithCors(request, banCache)
         }
-        const list = spare.list
+        const list = urls.list
         const controllers = new Array(list.length)
         // noinspection JSCheckFunctionSignatures
-        const startFetch =
-            index => fetchWithCors(
+        const startFetch = index => fetchWithCors(
                 new Request(list[index], request),
                 banCache,
                 {signal: (controllers[index] = new AbortController()).signal}
@@ -109,7 +113,7 @@ const fetchFile = (request, banCache, spare = null) => {
                     resolve(res.r)
                 }).catch(() => reject(`请求 ${request.url} 失败`))
             }
-            const id = setTimeout(startAll, spare.timeout)
+            const id = setTimeout(startAll, urls.timeout)
             const first = startFetch(0)
                 .then(res => {
                     if (flag) {
@@ -152,7 +156,7 @@ const fetchFile = (request, banCache, spare = null) => {
 
     /**
      * 缓存列表
-     * @type {Map<string, {s, e}[]>}
+     * @type {Map<string, function(any)[]>}
      */
     const cacheMap = new Map()
 
@@ -162,32 +166,37 @@ const fetchFile = (request, banCache, spare = null) => {
         // [blockRequest call]
         if (request.method !== 'GET' || !request.url.startsWith('http')) return
         // [modifyRequest call]
-        if (skipRequest?.(request)) return
+        // [skipRequest call]
         let cacheKey = url.hostname + url.pathname + url.search
-        let cache = cacheMap.get(cacheKey)
-        if (cache) {
-            return event.respondWith(
-                new Promise((resolve, reject) => {
-                    cacheMap.get(cacheKey).push({s: resolve, e: reject})
-                })
+        let cache
+        if (isMemoryQueue(request)) {
+            cache = cacheMap.get(cacheKey)
+            if (cache) {
+                return event.respondWith(
+                    new Promise((resolve, reject) => {
+                        cacheMap.get(cacheKey).push(arg => arg.body ? resolve(arg) : reject(arg))
+                    })
+                )
+            }
+            cacheMap.set(cacheKey, cache = [])
+        }
+        /** 处理拉取 */
+        const handleFetch = promise => {
+            event.respondWith(
+                cache ? promise.then(response => {
+                    for (let item of cache) {
+                        item(response.clone())
+                    }
+                }).catch(err => {
+                    for (let item of cache) {
+                        item(err)
+                    }
+                }).then(() => {
+                    cacheMap.delete(cacheKey)
+                    return promise
+                }) : promise
             )
         }
-        cacheMap.set(cacheKey, cache = [])
-        /** 处理拉取 */
-        const handleFetch = promise => event.respondWith(
-            promise.then(response => {
-                for (let item of cache) {
-                    item.s(response.clone())
-                }
-            }).catch(err => {
-                for (let item of cache) {
-                    item.e(err)
-                }
-            }).then(() => {
-                cacheMap.delete(cacheKey)
-                return promise
-            })
-        )
         const cacheRule = findCache(url)
         if (cacheRule) {
             let key = `https://${url.host}${url.pathname}`
@@ -207,10 +216,10 @@ const fetchFile = (request, banCache, spare = null) => {
                 )
             )
         } else {
-            const spare = getSpareUrls(request.url)
-            if (spare) handleFetch(fetchFile(request, false, spare))
+            const urls = getSpareUrls(request.url)
+            if (urls) handleFetch(fetchFile(request, false, urls))
             // [modifyRequest else-if]
-            else handleFetch(fetchWithCors(request, false).catch(err => new Response(err, {status: 499})))
+            else handleFetch(fetchWithCache(request).catch(err => new Response(err, {status: 499})))
         }
     })
 
@@ -218,27 +227,48 @@ const fetchFile = (request, banCache, spare = null) => {
         // [debug message]
         if (event.data === 'update')
             updateJson().then(info => {
-                    info.type = 'update'
-                    event.source.postMessage(info)
-                }
-            )
+                info.type = 'update'
+                event.source.postMessage(info)
+            })
     })
 
     /**
-     * 添加 cors 配置请求指定资源
+     * 基础 fetch
      * @param request {Request|string}
+     * @param banCache {boolean} 是否禁用缓存
+     * @param cors {boolean} 是否启用 cors
+     * @param optional {RequestInit?} 额外的配置项
+     * @return {Promise<Response>}
+     */
+    const baseFetcher = (request, banCache, cors, optional) => {
+        if (!optional) optional = {}
+        optional.cache = banCache ? 'no-store' : 'default'
+        if (cors) {
+            optional.mode = 'cors'
+            optional.credentials = 'same-origin'
+        }
+        return fetch(request, optional)
+    }
+
+    /**
+     * 添加 cors 配置请求指定资源
+     * @param request {Request}
+     * @param optional {RequestInit?} 额外的配置项
+     * @return {Promise<Response>}
+     */
+    const fetchWithCache = (request, optional) =>
+        baseFetcher(request, false, isCors(request), optional)
+
+    // noinspection JSUnusedLocalSymbols
+    /**
+     * 添加 cors 配置请求指定资源
+     * @param request {Request}
      * @param banCache {boolean} 是否禁用 HTTP 缓存
      * @param optional {RequestInit?} 额外的配置项
      * @return {Promise<Response>}
      */
-    const fetchWithCors = (request, banCache, optional) => fetch(
-        request,
-        Object.assign({
-            cache: optional ? "no-store" : "default",
-            mode: 'cors',
-            credentials: 'same-origin'
-        }, optional || {})
-    )
+    const fetchWithCors = (request, banCache, optional) =>
+        baseFetcher(request, banCache, true, optional)
 
     /**
      * 判断指定 url 击中了哪一种缓存，都没有击中则返回 null
