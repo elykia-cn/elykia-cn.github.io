@@ -14,7 +14,7 @@
   diytitle: {"enable":true,"leaveTitle":"w(ﾟДﾟ)w 不要走嘛！好不好！","backTitle":"♪(^∇^*)欢迎回家！"},
   LA51: {"enable":true,"ck":"3GaWQlpUHZP5i655","LingQueMonitorID":"3IL2F28MpBcl4Tas"},
   greetingBox: {"enable":true,"default":"晚上好👋","list":[{"greeting":"晚安😴","startTime":0,"endTime":5},{"greeting":"早上好鸭👋, 祝你一天好心情！","startTime":6,"endTime":9},{"greeting":"上午好👋, 状态很好，鼓励一下～","startTime":10,"endTime":10},{"greeting":"11点多啦, 在坚持一下就吃饭啦～","startTime":11,"endTime":11},{"greeting":"午安👋, 宝贝","startTime":12,"endTime":14},{"greeting":"🌈充实的一天辛苦啦！","startTime":14,"endTime":18},{"greeting":"19点喽, 奖励一顿丰盛的大餐吧🍔。","startTime":19,"endTime":19},{"greeting":"晚上好👋, 在属于自己的时间好好放松😌~","startTime":20,"endTime":24}]},
-  twikooEnvId: 'https://twikoo.elf-elysia.love/',
+  twikooEnvId: 'https://twikoo.elykia.cn/',
   commentBarrageConfig:{"enable":true,"maxBarrage":1,"barrageTime":4000,"accessToken":"c500b3f4fe771686b4de121cbdcd254a","mailMd5":""},
   root: '/',
   preloader: {"source":3},
@@ -440,7 +440,7 @@ queueMicrotask(() => {
   const init = () => {
     twikoo.init(Object.assign({
       el: '#twikoo-wrap',
-      envId: 'https://twikoo.elf-elysia.love/',
+      envId: 'https://twikoo.elykia.cn/',
       region: '',
       onCommentLoaded: () => {
         anzhiyu.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
@@ -450,14 +450,14 @@ queueMicrotask(() => {
 
   const loadTwikoo = () => {
     if (typeof twikoo === 'object') setTimeout(runFn,0)
-    else getScript('https://cdn.staticfile.org/twikoo/1.6.32/twikoo.all.min.js').then(runFn)
+    else getScript('https://cdn.staticfile.org/twikoo/1.6.34/twikoo.all.min.js').then(runFn)
   }
 
   const getCount = () => {
     const countELement = document.getElementById('twikoo-count')
     if(!countELement) return
     twikoo.getCommentsCount({
-      envId: 'https://twikoo.elf-elysia.love/',
+      envId: 'https://twikoo.elykia.cn/',
       region: '',
       urls: [window.location.pathname],
       includeReply: false
@@ -499,7 +499,7 @@ queueMicrotask(() => {
   const getComment = () => {
     const runTwikoo = () => {
       twikoo.getRecentComments({
-        envId: 'https://twikoo.elf-elysia.love/',
+        envId: 'https://twikoo.elykia.cn/',
         region: '',
         pageSize: 6,
         includeReply: true
@@ -525,7 +525,7 @@ queueMicrotask(() => {
     if (typeof twikoo === 'object') {
       runTwikoo()
     } else {
-      getScript('https://cdn.staticfile.org/twikoo/1.6.32/twikoo.all.min.js').then(runTwikoo)
+      getScript('https://cdn.staticfile.org/twikoo/1.6.34/twikoo.all.min.js').then(runTwikoo)
     }
   }
 
