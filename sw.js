@@ -6,7 +6,7 @@
     /** 控制信息存储地址（必须以`/`结尾） */
     const CTRL_PATH = 'https://id.v3/'
 
-    const ejectDomain = 'www.elykia.cn'
+    const ejectDomain = 'blog.elykia.cn'
 
 
     /**
