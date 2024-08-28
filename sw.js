@@ -282,6 +282,10 @@ const handleFetchEvent = (event) => {
 self.addEventListener('install', (_event) => {
                 // @ts-ignore
                 skipWaiting();
+                if (ESCAPE) {
+                    // noinspection JSIgnoredPromiseFromCall
+                    handleEscape();
+                }
             });
 self.addEventListener('activate', (event) => event.waitUntil(clients.claim()));
 self.addEventListener('fetch', (event) => handleFetchEvent(event));
