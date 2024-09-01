@@ -1,0 +1,321 @@
+(() => {const CACHE_NAME = 'kmarBlogCache';
+const VERSION_PATH = 'https://id.v3/';
+const ESCAPE = 0;
+const INVALID_KEY = 'X-Swpp-Invalid';
+const STORAGE_TIMESTAMP = 'X-Swpp-Time';
+const UPDATE_JSON_URL = 'swpp/update.json';
+const UPDATE_CD = 600000;
+const matchCacheRule = (_url) => false;
+const normalizeUrl = (url) => {
+                    if (url.endsWith('/index.html'))
+                        return url.substring(0, url.length - 10);
+                    if (url.endsWith('.html'))
+                        return url.substring(0, url.length - 5);
+                    else
+                        return url;
+                };
+const matchUpdateRule = (exp) => {
+                    /**
+                     * 遍历所有value
+                     * @param action 接受value并返回bool的函数
+                     * @return 如果 value 只有一个则返回 `action(value)`，否则返回所有运算的或运算（带短路）
+                     */
+                    const forEachValues = (action) => {
+                        const value = exp.value;
+                        if (Array.isArray(value)) {
+                            for (let it of value) {
+                                if (action(it))
+                                    return true;
+                            }
+                            return false;
+                        }
+                        else
+                            return action(value);
+                    };
+                    switch (exp.flag) {
+                        case 'html':
+                            return url => /\/$|\.html$/.test(url);
+                        case 'suf':
+                            return url => forEachValues(value => url.endsWith(value));
+                        case 'pre':
+                            return url => forEachValues(value => url.startsWith(value));
+                        case 'str':
+                            return url => forEachValues(value => url.includes(value));
+                        case 'reg':
+                            return url => forEachValues(value => new RegExp(value, 'i').test(url));
+                        default:
+                            throw exp;
+                    }
+                };
+const matchFromCaches = (request) => caches.match(request, { cacheName: CACHE_NAME });
+const writeResponseToCache = async (request, response, date) => {
+                if (date) {
+                    const headers = new Headers(response.headers);
+                    headers.set(STORAGE_TIMESTAMP, new Date().toISOString());
+                    response = new Response(response.body, {
+                        status: response.status,
+                        headers
+                    });
+                }
+                const cache = await caches.open(CACHE_NAME);
+                await cache.put(request, response);
+            };
+const markCacheInvalid = (request) => matchFromCaches(request).then(response => {
+                if (!response)
+                    return;
+                const headers = new Headers(response.headers);
+                headers.set(INVALID_KEY, '1');
+                return writeResponseToCache(request, new Response(response.body, { status: response.status, headers }));
+            });
+const isValidCache = (response, rule) => {
+                const headers = response.headers;
+                if (headers.has(INVALID_KEY))
+                    return false;
+                if (rule < 0)
+                    return true;
+                const storage = headers.get(STORAGE_TIMESTAMP);
+                if (!storage)
+                    return true;
+                const storageDate = new Date(storage).getTime();
+                const nowTimestamp = Date.now();
+                return nowTimestamp - storageDate < rule;
+            };
+const readVersion = () => matchFromCaches(VERSION_PATH)
+                .then(response => response?.json?.());
+const writeVersion = (version) => {
+                version.tp = Date.now();
+                return writeResponseToCache(VERSION_PATH, new Response(JSON.stringify(version)));
+            };
+const postMessage = async (type, data, ...goals) => {
+                if (!goals.length) {
+                    // @ts-ignore
+                    goals = await clients.matchAll();
+                }
+                const body = { type, data };
+                for (let client of goals) {
+                    client.postMessage(body);
+                }
+            };
+const isFetchSuccessful = (response) => [200, 301, 302, 307, 308].includes(response.status);
+const fetchWrapper = (request, banCache, cors, optional) => {
+                const init = {
+                    referrerPolicy: request.referrerPolicy ?? '',
+                    ...optional
+                };
+                init.cache = banCache ? 'no-store' : 'default';
+                if (cors) {
+                    init.mode = 'cors';
+                    init.credentials = 'same-origin';
+                }
+                return fetch(request, init);
+            };
+const isCors = () => false;
+const getFastestRequests = null;
+const getStandbyRequests = null;
+const fetchFastest = async (list, optional) => {
+                const fallbackFetch = (request, controller) => {
+                    return fetchWrapper(request, true, true, {
+                        ...optional,
+                        signal: controller?.signal
+                    });
+                };
+                const controllers = Array.from({ length: list.length }, () => new AbortController());
+                try {
+                    const { i: index, r: response } = await Promise.any(list.map((it, index) => fallbackFetch(it, controllers[index])
+                        .then(response => isFetchSuccessful(response) ? { i: index, r: response } : Promise.reject(response))));
+                    for (let k = 0; k < list.length; k++) {
+                        if (k != index)
+                            controllers[k].abort();
+                    }
+                    return response;
+                }
+                catch (err) {
+                    const value = err.errors[0];
+                    return value.body ? value : new Response(err.toString(), { status: -1 });
+                }
+            };
+const fetchStandby = async (request, standbyRequests, optional) => {
+                const fallbackFetch = (request, controller) => {
+                    return fetchWrapper(request, true, true, {
+                        ...optional,
+                        signal: controller?.signal
+                    });
+                };
+                // 需要用到的一些字段，未初始化的后面会进行初始化
+                let id, standbyResolve, standbyReject;
+                // 尝试封装 response
+                const resolveResponse = (index, response) => isFetchSuccessful(response) ? { i: index, r: response } : Promise.reject(response);
+                const { t: time, l: listGetter } = standbyRequests;
+                const controllers = new Array(listGetter.length + 1);
+                // 尝试同时拉取 standbyRequests 中的所有 Request
+                const task = () => Promise.any(listGetter().map((it, index) => fallbackFetch(it, controllers[index + 1] = new AbortController())
+                    .then(response => resolveResponse(index + 1, response)))).then(obj => standbyResolve(obj))
+                    .catch(() => standbyReject());
+                // 尝试拉取初始 request
+                const firstFetch = fallbackFetch(request, controllers[0] = new AbortController())
+                    .then(response => resolveResponse(0, response))
+                    .catch(err => {
+                    // 如果失败则跳过等待
+                    clearTimeout(id);
+                    // noinspection JSIgnoredPromiseFromCall
+                    task();
+                    return Promise.reject(err); // 保留当前错误
+                });
+                // 延时拉取其它 request
+                const standby = new Promise((resolve1, reject1) => {
+                    standbyResolve = resolve1;
+                    standbyReject = reject1;
+                    id = setTimeout(task, time);
+                });
+                try {
+                    const { i: index, r: response } = await Promise.any([firstFetch, standby]);
+                    // 中断未完成的请求
+                    for (let k = 0; controllers[k]; k++) {
+                        if (k != index)
+                            controllers[k].abort();
+                    }
+                    return response;
+                }
+                catch (err) {
+                    const value = err.errors[0];
+                    return value.body ? value : new Response(err.toString(), { status: -1 });
+                }
+            };
+const fetchFile = (request, optional) => {
+                        // @ts-ignore
+                        if (!request.url)
+                            request = new Request(request);
+                        return fetchWrapper(request, true, true, optional);
+                    };
+const isBlockRequest = () => false;
+const modifyRequest = () => null;
+const handleEscape = async () => {
+                const oldVersion = await readVersion();
+                if (ESCAPE && oldVersion && oldVersion.escape !== ESCAPE) {
+                    await caches.delete(CACHE_NAME);
+                    await postMessage('escape', null);
+                }
+            };
+const handleUpdate = async (oldVersion, force) => {
+                if (!force && oldVersion && Date.now() - oldVersion.tp < UPDATE_CD)
+                    return;
+                const json = await (await fetch(UPDATE_JSON_URL, {
+                    // @ts-ignore
+                    priority: 'high'
+                })).json();
+                const { global, info } = json;
+                const newVersion = { global, local: info[0].version, escape: ESCAPE };
+                // 新访客或触发了逃生门
+                if (!oldVersion || (ESCAPE && ESCAPE !== oldVersion.escape)) {
+                    await writeVersion(newVersion);
+                    return oldVersion ? 1 : -1;
+                }
+                // 已是最新版本时跳过剩余步骤
+                if (oldVersion.global === global && oldVersion.local === newVersion.local)
+                    return;
+                // 按版本顺序更新缓存，直到找到当前版本
+                const expressionList = [];
+                for (let infoElement of info) {
+                    if (infoElement.version === oldVersion.local) {
+                        const urlList = [];
+                        await caches.open(CACHE_NAME)
+                            .then(cache => cache.keys())
+                            .then(async (keys) => {
+                            for (let request of keys) {
+                                const url = request.url;
+                                if (url !== VERSION_PATH && expressionList.find(it => it(url))) {
+                                    await markCacheInvalid(request);
+                                    urlList.push(url);
+                                }
+                            }
+                        });
+                        return urlList;
+                    }
+                    const changeList = infoElement.change;
+                    if (changeList) {
+                        for (let change of changeList) {
+                            expressionList.push(matchUpdateRule(change));
+                        }
+                    }
+                }
+                // 运行到这里说明版本号丢失
+                await caches.delete(CACHE_NAME)
+                    .then(() => writeVersion(newVersion));
+                return 2;
+            };
+const handleFetchEvent = (event) => {
+                // @ts-ignore
+                let request = event.request;
+                if (request.method !== 'GET' || !request.url.startsWith('http'))
+                    return;
+                if (isBlockRequest(request)) {
+                    // @ts-ignore
+                    return event.respondWith(new Response(null, { status: 204 }));
+                }
+                const newRequest = modifyRequest(request);
+                if (newRequest)
+                    request = newRequest;
+                const cacheKey = new URL(normalizeUrl(request.url));
+                const cacheRule = matchCacheRule(cacheKey);
+                if (cacheRule) {
+                    // @ts-ignore
+                    event.respondWith(matchFromCaches(cacheKey).then(cacheResponse => {
+                        if (cacheResponse && isValidCache(cacheResponse, cacheRule))
+                            return cacheResponse;
+                        const responsePromise = fetchFile(request)
+                            .then(response => {
+                            if (isFetchSuccessful(response)) {
+                                // noinspection JSIgnoredPromiseFromCall
+                                writeResponseToCache(cacheKey, response.clone());
+                                return response;
+                            }
+                            return cacheResponse ?? response;
+                        });
+                        return cacheResponse ? responsePromise.catch(() => cacheResponse) : responsePromise;
+                    }));
+                }
+                else if (newRequest) {
+                    // @ts-ignore
+                    event.respondWith(fetchWrapper(request, false, isCors(request)));
+                }
+            };
+self.addEventListener('install', (_event) => {
+                // @ts-ignore
+                skipWaiting();
+                if (ESCAPE) {
+                    // noinspection JSIgnoredPromiseFromCall
+                    handleEscape();
+                }
+            });
+self.addEventListener('activate', (event) => event.waitUntil(clients.claim()));
+self.addEventListener('fetch', (event) => handleFetchEvent(event));
+self.addEventListener('periodicSync', (event) => {
+                // @ts-ignore
+                if (event.tag === 'update') {
+                    // @ts-ignore
+                    event.waitUntil(handleUpdate(true));
+                }
+            });
+self.addEventListener('message', async (event) => {
+                // @ts-ignore
+                const data = event.data;
+                switch (data.type) {
+                    case 'update':
+                        const oldVersion = await readVersion();
+                        const updateResult = await handleUpdate(oldVersion);
+                        if (!updateResult)
+                            return;
+                        switch (updateResult) {
+                            case -1:
+                                return postMessage('new', null);
+                            case 1:
+                                return postMessage('revise', null);
+                            case 2:
+                                return postMessage('update', null);
+                            default:
+                                if (Array.isArray(updateResult)) {
+                                    return postMessage('update', updateResult);
+                                }
+                        }
+                }
+            })})()
