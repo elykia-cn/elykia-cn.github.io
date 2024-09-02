@@ -45,7 +45,7 @@ const messageEvent = (event) => {
                     sessionStorage.removeItem(SESSION_KEY);
                 }
             };
-            (_inlineA)();
+            _inlineA()
             navigator.serviceWorker.addEventListener('message', event => {
                 messageEvent()
             })
