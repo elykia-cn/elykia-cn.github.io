@@ -4923,6 +4923,16 @@ body[data-type='about'] #web_bg {
   color: var(--anzhiyu-white);
   overflow: hidden;
 }
+.author-content-item.like-technology::after {
+  -webkit-box-shadow: 0 -69px 203px 11px #453e38 inset;
+  box-shadow: 0 -69px 203px 11px #453e38 inset;
+  position: absolute;
+  content: '';
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
 .author-content-item.like-music::after {
   -webkit-box-shadow: 0 -69px 203px 11px #453e38 inset;
   box-shadow: 0 -69px 203px 11px #453e38 inset;
@@ -21351,7 +21361,7 @@ div#category {
   color: var(--anzhiyu-fontcolor);
   padding: 0 0.2em;
   text-decoration: none;
-  font-family: auto;
+  font-family: inherit;
 }
 #article-container
   a:not([data-fancybox="gallery"]):not(.headerlink):not(.cf-friends-link):not(.btn-anzhiyu):not(
@@ -21518,7 +21528,7 @@ html.hide-aside .layout > div:first-child {
   /* 分类/标签较少时，可以选择不设置 width，居中显示 catalog-list-item */
   display: flex;
   white-space: nowrap;
-  overflow-x: scroll;
+ /* overflow-x: auto; 在Windwos系统下多个浏览器测试错位（auto下改变页面宽度会出现错位，宽屏下不显示，可直接标注掉或者删除。）*/
 }
 
 #catalog-list::-webkit-scrollbar {
