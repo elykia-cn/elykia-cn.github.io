@@ -6,7 +6,7 @@
   <link href="https://blog.elykia.cn/atom.xml" rel="self"/>
   
   <link href="https://blog.elykia.cn/"/>
-  <updated>2024-09-02T06:38:10.035Z</updated>
+  <updated>2024-09-03T14:32:19.462Z</updated>
   <id>https://blog.elykia.cn/</id>
   
   <author>
@@ -15,6 +15,41 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>解决git clone报错 git fatal Unable to find remote helper for &#39;https&#39;</title>
+    <link href="https://blog.elykia.cn/posts/14.html"/>
+    <id>https://blog.elykia.cn/posts/14.html</id>
+    <published>2024-09-03T14:16:48.000Z</published>
+    <updated>2024-09-03T14:32:19.462Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="适用设备">适用设备</h2><ul><li>Windows 11</li></ul><h2 id="问题描述">问题描述</h2><ul><li><p>相信大家在git clonegithub中的项目时，一定都与遇到了不少令人头疼的错误。</p></li><li><p>比如这样的：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">error: RPC failed; curl 56 OpenSSL SSL_read: Connection was reset, errno 10054；</span><br></pre></td></tr></table></figure><p>亦或者是这样的：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fatal: unable to access &#x27;https://github.com/WongKinYiu/yolov7.git/&#x27;: SSL connection timeout</span><br></pre></td></tr></table></figure></li></ul><h2 id="解决方案">解决方案</h2><ul><li><p>初始化</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure></li></ul><h2 id="方法原理">方法原理</h2><ul><li>绝大多数人肯定是下了git就去下东西了，好运的话确实能一次下完，没做这一步就去按别的贴去设置的，喜提“fatal:not in a git directory”</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;适用设备&quot;&gt;适用设备&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Windows 11&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;问题描述&quot;&gt;问题描述&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;相信大家在git clone
+github中的项目时，一定都与遇到了不少令人头疼的错</summary>
+      
+    
+    
+    
+    <category term="编程开发" scheme="https://blog.elykia.cn/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/"/>
+    
+    
+    <category term="问题" scheme="https://blog.elykia.cn/tags/%E9%97%AE%E9%A2%98/"/>
+    
+    <category term="git" scheme="https://blog.elykia.cn/tags/git/"/>
+    
+    <category term="Windows" scheme="https://blog.elykia.cn/tags/Windows/"/>
+    
+  </entry>
   
   <entry>
     <title>Windows桌面图标调整布局后重启不保存的解决方案</title>
