@@ -11948,6 +11948,9 @@ h1.page-title + .tag-cloud-list {
 #post #post-info #post-firstinfo .meta-firstline a.post-meta-original {
   background: var(--anzhiyu-black);
 }
+#post #post-info #post-firstinfo .meta-firstline a.post-meta-categories {
+  background: var(--anzhiyu-black);
+}
 #post #post-info #post-firstinfo .meta-firstline .article-meta__tags {
   color: var(--anzhiyu-black);
 }
