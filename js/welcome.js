@@ -11,7 +11,7 @@ function welcometxmap() {
         window.QQmap = function (data) {
             ipLoacation = data;
             // 将数据保存到 localStorage，过期时间设置为 1 天
-            window.saveToLocal.set('ipLocation', ipLoacation, 1);
+            window.saveToLocal.set('ipLocation', ipLoacation, 0.01);
             document.body.removeChild(script);
             delete window.QQmap;
         };
