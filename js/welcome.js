@@ -1,23 +1,22 @@
 function welcometxmap() {
-    //请求数据
-    ipLoacation = window.saveToLocal.get('ipLocation');
-    if (ipLoacation) {
-        // 使用 ipLocation
-    } else {
-        // 数据已过期或不存在
-        var script = document.createElement('script');
-        var url = `https://apis.map.qq.com/ws/location/v1/ip?key=${txkey}&output=jsonp`;
-        script.src = url;
-        window.QQmap = function (data) {
-            ipLoacation = data;
-            // 将数据保存到 localStorage，过期时间设置为 1 天
-            window.saveToLocal.set('ipLocation', ipLoacation, 0.01);
-            document.body.removeChild(script);
-            delete window.QQmap;
-        };
-        document.body.appendChild(script);
-    }
-    showWelcome();
+    // 创建 script 元素进行 JSONP 请求
+    const script = document.createElement('script');
+    const url = `https://apis.map.qq.com/ws/location/v1/ip?key=${txkey}&output=jsonp`;
+
+    script.src = url;
+
+    // 定义 JSONP 回调函数
+    window.QQmap = function (data) {
+        if (data && data.status === 0) {
+            showWelcome(data); // 确保 API 数据加载后调用
+        } else {
+            console.error("无法获取 IP 位置数据");
+        }
+        document.body.removeChild(script); // 清理 script 元素
+        delete window.QQmap; // 删除回调函数，避免污染全局作用域
+    };
+
+    document.body.appendChild(script);
 }
 function getDistance(e1, n1, e2, n2) {
     const R = 6371
