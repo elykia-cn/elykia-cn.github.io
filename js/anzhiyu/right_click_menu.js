@@ -363,7 +363,7 @@ function replaceAll(string, search, replace) {
 rm.searchBaidu = function () {
   anzhiyu.snackbarShow("即将跳转到必应搜索", false, 2000);
   setTimeout(function () {
-    window.open("https://cn.bing.com/search?q=6" + selectTextNow);
+    window.open("https://cn.bing.com/search?q=" + selectTextNow);
   }, "2000");
   rm.hideRightMenu();
 };

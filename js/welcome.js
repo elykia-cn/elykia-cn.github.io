@@ -308,9 +308,9 @@ const Elykia = {
 
     //自定义文本需要放的位置
     WelcomeInfo && (WelcomeInfo.innerHTML = `
-    欢迎来自 <strong>${address}</strong> 的小伙伴💖<br>
+    欢迎来自 <strong>${address}</strong> 的小伙伴🍂<br>
     <strong>${welcome_info}！</strong><br>
-    您距离 <strong>Elykia</strong> 约有 <strong>${dist}</strong> 公里！🍂<br>
+    您距离 <strong>Elykia</strong> 约有 <strong>${dist}</strong> 公里！<br>
     您的IP地址为：<strong>${IP}</strong><br>
     <strong>${timeChange}！</strong>`);
   },
