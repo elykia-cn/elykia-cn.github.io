@@ -61,35 +61,35 @@ const Elykia = {
       //海外地区不支持省份及城市信息
       switch (ipStore.result.ad_info.nation) {
         case "日本":
-          welcome_info = "こんにちは、日本から来た友達";
+          welcome_info = "よろしく，一起去看樱花吗;
           break;
         case "美国":
-          welcome_info = "Hello, friend from the United States";
+          welcome_info = "Let us live in peace!";
           break;
         case "英国":
-          welcome_info = "Hello, friend from the UK";
+          welcome_info = "想同你一起夜乘伦敦眼";
           break;
         case "俄罗斯":
           welcome_info = "Здравствуйте, друзья из России.";
           break;
         case "法国":
-          welcome_info = "Bonjour amis de France";
+          welcome_info = "C'est La Vie";
           break;
         case "德国":
-          welcome_info = "Hallo, Freund aus Deutschland";
+          welcome_info = "Die Zeit verging im Fluge.";
           break;
         case "澳大利亚":
-          welcome_info = "Hello, friend from Australia";
+          welcome_info = "一起去大堡礁吧！";
           break;
         case "加拿大":
-          welcome_info = "Hello, friend from Canada";
+          welcome_info = "拾起一片枫叶赠予你";
           break;
         case "中国":
-          address = ipStore.result.ad_info.province + " " + ipStore.result.ad_info.city;
+          address = ipLocation.result.ad_info.province + " " + ipLocation.result.ad_info.city + " " + ipLocation.result.ad_info.district;
           switch (ipStore.result.ad_info.province) {
             case "北京市":
               address = "北京市";
-              welcome_info = "北——京——欢迎你";
+              welcome_info = "北——京——欢迎你~~~";
               break;
             case "天津市":
               address = "天津市";
@@ -129,16 +129,20 @@ const Elykia = {
                 case "苏州市":
                   welcome_info = "上有天堂，下有苏杭";
                   break;
-                case "泰州市":
-                  welcome_info = "这里也是我的故乡";
-                  break;
                 default:
                   welcome_info = "散装是必须要散装的";
                   break;
               }
               break;
             case "浙江省":
-              welcome_info = "东风渐绿西湖柳，雁已还人未南归";
+              switch (ipStore.result.ad_info.city) {
+                case "杭州市":
+                  welcome_info = "东风渐绿西湖柳，雁已还人未南归";
+                  break;
+                default:
+                  welcome_info = "望海楼明照曙霞,护江堤白蹋晴沙";
+                  break;
+              }
               break;
             case "安徽省":
               welcome_info = "蚌埠住了，芜湖起飞";
@@ -153,13 +157,33 @@ const Elykia = {
               welcome_info = "遥望齐州九点烟，一泓海水杯中泻";
               break;
             case "湖北省":
-              welcome_info = "来碗热干面";
+              switch (ipStore.result.ad_info.city) {
+                case "黄冈市":
+                  welcome_info = "红安将军县！辈出将才！";
+                  break;
+                default:
+                  welcome_info = "来碗热干面~";
+                  break;
+              }
               break;
             case "湖南省":
               welcome_info = "74751，长沙斯塔克";
               break;
             case "广东省":
-              welcome_info = "老板来两斤福建人";
+              switch (ipStore.result.ad_info.city) {
+                case "广州市":
+                  welcome_info = "看小蛮腰，喝早茶了嘛~";
+                  break;
+                case "深圳市":
+                  welcome_info = "今天你逛商场了嘛~";
+                  break;
+                case "阳江市":
+                  welcome_info = "阳春合水！";
+                  break;
+                default:
+                  welcome_info = "老板来两斤福建人";
+                  break;
+              }
               break;
             case "广西壮族自治区":
               welcome_info = "桂林山水甲天下";
@@ -236,6 +260,31 @@ const Elykia = {
               address = "澳门特别行政区";
               welcome_info = "性感荷官，在线发牌";
               break;
+            case "河南省":
+              switch (ipStore.result.ad_info.city) {
+                case "郑州市":
+                  welcome_info = "豫州之域，天地之中";
+                  break;
+                case "南阳市":
+                  welcome_info = "臣本布衣，躬耕于南阳此南阳非彼南阳！";
+                  break;
+                case "驻马店市":
+                  welcome_info = "峰峰有奇石，石石挟仙气嵖岈山的花很美哦！";
+                  break;
+                case "开封市":
+                  welcome_info = "刚正不阿包青天！";
+                  break;
+                case "洛阳市":
+                  welcome_info = "洛阳牡丹甲天下";
+                  break;
+                case "平顶山市":
+                  welcome_info = "QQ市~ 博主家乡~ 欢迎来玩~！";
+                  break;
+                default:
+                  welcome_info = "可否带我品尝河南烩面啦？";
+                  break;
+              }
+              break;
             default:
               welcome_info = "带我去你的城市逛逛吧";
               break;
@@ -252,18 +301,18 @@ const Elykia = {
       else if (date.getHours() >= 11 && date.getHours() < 13) timeChange = "<span>☀️中午好，该摸鱼吃午饭了</span>";
       else if (date.getHours() >= 13 && date.getHours() < 15) timeChange = "<span>🕞下午好，懒懒地睡个午觉吧</span>";
       else if (date.getHours() >= 15 && date.getHours() < 16) timeChange = "<span>🍵三点几啦，饮茶先啦</span>";
-      else if (date.getHours() >= 16 && date.getHours() < 19) timeChange = "<span>🌇夕阳无限好，只是近黄昏</span>";
+      else if (date.getHours() >= 16 && date.getHours() < 18) timeChange = "<span>🚶‍♂️即将下班，记得按时吃饭~</span>";
+      else if (date.getHours() >= 18 && date.getHours() < 19) timeChange = "<span>🌇夕阳无限好，只是近黄昏</span>";
       else if (date.getHours() >= 19 && date.getHours() < 24) timeChange = "<span>🌔晚上好，夜生活嗨起来</span>";
       else timeChange = "🌌夜深了，早点休息，少熬夜";
   
       //自定义文本需要放的位置
-      WelcomeInfo && (WelcomeInfo.innerHTML = `🙋欢迎来自 <strong>${address}</strong> 的小伙伴<br>
-      😊<strong>${welcome_info}！</strong><br>
-      🗺️您距离 <strong>Elykia</strong> 约有 <strong>${dist}</strong> 公里！<br>
-      当前IP地址为：<br>
-      <strong style="font-size:12px;"><psw>${IP}</psw></strong><br>
+      WelcomeInfo && (WelcomeInfo.innerHTML = `
+      欢迎来自 <strong>${address}</strong> 的小伙伴<br>
+      <strong>${welcome_info}！</strong><br>
+      您距离 <strong>Elykia</strong> 约有 <strong>${dist}</strong> 公里！<br>
+      您的IP地址为：<strong>${IP}</strong><br>
       <strong>${timeChange}！</strong>`);
-  
     },
   }
   
