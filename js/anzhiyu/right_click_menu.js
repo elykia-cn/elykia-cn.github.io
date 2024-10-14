@@ -361,9 +361,9 @@ function replaceAll(string, search, replace) {
 
 // 百度搜索
 rm.searchBaidu = function () {
-  anzhiyu.snackbarShow("即将跳转到百度搜索", false, 2000);
+  anzhiyu.snackbarShow("即将跳转到必应搜索", false, 2000);
   setTimeout(function () {
-    window.open("https://www.baidu.com/s?wd=" + selectTextNow);
+    window.open("https://www.bing.com/s?wd=" + selectTextNow);
   }, "2000");
   rm.hideRightMenu();
 };
