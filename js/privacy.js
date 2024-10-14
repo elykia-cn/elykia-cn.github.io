@@ -22,8 +22,7 @@ function getIpInfo(){
         var parser = new UAParser();
         var result = parser.getResult();
         document.getElementById("userAgentOS").innerHTML = result.os.name + " " + result.os.version;
-        document.getElementById("userAgentBrowser").innerHTML = result.browser.name + " " + result.browser.version + " " + result.browser.major;
-        document.getElementById("userAgentDevice").innerHTML = result.device.type + " " + result.device.model + " " + result.device.vendor;
+        document.getElementById("userAgentBrowser").innerHTML = result.browser.name + " " + result.browser.version;
       })
   }
   
