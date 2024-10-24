@@ -1800,9 +1800,8 @@ document.addEventListener("DOMContentLoaded", function () {
     anzhiyu.addEventListenerConsoleMusicList(false);
     anzhiyu.initPaginationObserver();
     
-    // 以上是原有的
     // 欢迎信息
-    Elykia.setWelcome_info();
+    elykia.setWelcome_info();
 
     setTimeout(() => {
       setInputFocusListener();
