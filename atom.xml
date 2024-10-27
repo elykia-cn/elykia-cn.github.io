@@ -6,7 +6,7 @@
   <link href="https://blog.elykia.cn/atom.xml" rel="self"/>
   
   <link href="https://blog.elykia.cn/"/>
-  <updated>2024-10-27T15:32:07.250Z</updated>
+  <updated>2024-10-27T15:38:06.797Z</updated>
   <id>https://blog.elykia.cn/</id>
   
   <author>
@@ -21,18 +21,16 @@
     <link href="https://blog.elykia.cn/posts/17.html"/>
     <id>https://blog.elykia.cn/posts/17.html</id>
     <published>2024-10-27T15:22:12.000Z</published>
-    <updated>2024-10-27T15:32:07.250Z</updated>
+    <updated>2024-10-27T15:38:06.797Z</updated>
     
-    <content type="html"><![CDATA[<p>按下F12看了下代码，定位到图片。</p><figure><img src="https://bu.dusays.com/2024/10/27/671e5a5ecbc2f.png"alt="1.png" /><figcaption aria-hidden="true">1.png</figcaption></figure><p>蓝框中是原图链接，带用户水印的，跟最后的<code>data-original</code>里面的链接呈现的都是正常情况下的。</p><p>data-original-token中的数据，跟其它几个图片链接的文件名很相似，于是尝试用它替换掉其它图片的文件名，然后显示出了原图。</p>]]></content>
+    <content type="html"><![CDATA[<p>按下F12看了下代码，定位到图片。</p><p><img src="https://bu.dusays.com/2024/10/27/671e5a5ecbc2f.png" /></p><p>蓝框中是原图链接，带用户水印的，跟最后的<code>data-original</code>里面的链接呈现的都是正常情况下的。</p><p><code>data-original-token</code>中的数据，跟其它几个图片链接的文件名很相似，于是尝试用它替换掉其它图片的文件名，然后显示出了原图。</p>]]></content>
     
     
       
       
     <summary type="html">&lt;p&gt;按下F12看了下代码，定位到图片。&lt;/p&gt;
-&lt;figure&gt;
-&lt;img src=&quot;https://bu.dusays.com/2024/10/27/671e5a5ecbc2f.png&quot;
-alt=&quot;1.png&quot; /&gt;
-&lt;figcaption aria-hidden=&quot;</summary>
+&lt;p&gt;&lt;img src=&quot;https://bu.dusays.com/2024/10/27/671e5a5ecbc2f.png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;蓝框中是原图链接，带用户水印的，跟最后的&lt;code&gt;data-origina</summary>
       
     
     
