@@ -6,7 +6,7 @@
   <link href="https://blog.elykia.cn/atom.xml" rel="self"/>
   
   <link href="https://blog.elykia.cn/"/>
-  <updated>2024-10-25T13:41:55.232Z</updated>
+  <updated>2024-10-27T15:32:07.250Z</updated>
   <id>https://blog.elykia.cn/</id>
   
   <author>
@@ -15,6 +15,36 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>知乎图片去水印下载的方法</title>
+    <link href="https://blog.elykia.cn/posts/17.html"/>
+    <id>https://blog.elykia.cn/posts/17.html</id>
+    <published>2024-10-27T15:22:12.000Z</published>
+    <updated>2024-10-27T15:32:07.250Z</updated>
+    
+    <content type="html"><![CDATA[<p>按下F12看了下代码，定位到图片。</p><figure><img src="https://bu.dusays.com/2024/10/27/671e5a5ecbc2f.png"alt="1.png" /><figcaption aria-hidden="true">1.png</figcaption></figure><p>蓝框中是原图链接，带用户水印的，跟最后的<code>data-original</code>里面的链接呈现的都是正常情况下的。</p><p>data-original-token中的数据，跟其它几个图片链接的文件名很相似，于是尝试用它替换掉其它图片的文件名，然后显示出了原图。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;按下F12看了下代码，定位到图片。&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src=&quot;https://bu.dusays.com/2024/10/27/671e5a5ecbc2f.png&quot;
+alt=&quot;1.png&quot; /&gt;
+&lt;figcaption aria-hidden=&quot;</summary>
+      
+    
+    
+    
+    <category term="编程开发" scheme="https://blog.elykia.cn/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/"/>
+    
+    
+    <category term="知乎" scheme="https://blog.elykia.cn/tags/%E7%9F%A5%E4%B9%8E/"/>
+    
+    <category term="魔改" scheme="https://blog.elykia.cn/tags/%E9%AD%94%E6%94%B9/"/>
+    
+  </entry>
   
   <entry>
     <title>安知鱼主题文件魔改记录</title>
