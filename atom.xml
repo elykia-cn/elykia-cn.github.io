@@ -6,7 +6,7 @@
   <link href="https://blog.elykia.cn/atom.xml" rel="self"/>
   
   <link href="https://blog.elykia.cn/"/>
-  <updated>2024-10-27T15:38:06.797Z</updated>
+  <updated>2024-10-28T15:27:45.410Z</updated>
   <id>https://blog.elykia.cn/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="https://blog.elykia.cn/posts/17.html"/>
     <id>https://blog.elykia.cn/posts/17.html</id>
     <published>2024-10-27T15:22:12.000Z</published>
-    <updated>2024-10-27T15:38:06.797Z</updated>
+    <updated>2024-10-28T15:27:45.410Z</updated>
     
-    <content type="html"><![CDATA[<p>按下F12看了下代码，定位到图片。</p><p><img src="https://bu.dusays.com/2024/10/27/671e5a5ecbc2f.png" /></p><p>蓝框中是原图链接，带用户水印的，跟最后的<code>data-original</code>里面的链接呈现的都是正常情况下的。</p><p><code>data-original-token</code>中的数据，跟其它几个图片链接的文件名很相似，于是尝试用它替换掉其它图片的文件名，然后显示出了原图。</p>]]></content>
+    <content type="html"><![CDATA[<p>按下F12看了下代码，定位到图片。</p><p><img src="https://bu.dusays.com/2024/10/27/671e5a5ecbc2f.png" /></p><p>蓝框中是原图链接，带用户水印的，跟最后的<code>data-original</code>里面的链接呈现的都是正常情况下的。</p><p><code>data-original-token</code>中的数据，跟其它几个图片链接的文件名很相似，于是尝试用它替换掉其它图片的文件名，然后显示出了原图。</p><ul><li><strong>原图</strong>（有水印）</li></ul><figure><imgsrc="https://picx.zhimg.com/v2-bdeb30bcab773ef7c9e16cf38b6dc991_b.jpg"alt="https://picx.zhimg.com/v2-bdeb30bcab773ef7c9e16cf38b6dc991_b.jpg" /><figcaptionaria-hidden="true">https://picx.zhimg.com/v2-bdeb30bcab773ef7c9e16cf38b6dc991_b.jpg</figcaption></figure><ul><li><strong>data-original</strong>（有水印）</li></ul><figure><imgsrc="https://picx.zhimg.com/v2-bdeb30bcab773ef7c9e16cf38b6dc991_r.jpg"alt="https://picx.zhimg.com/v2-bdeb30bcab773ef7c9e16cf38b6dc991_r.jpg" /><figcaptionaria-hidden="true">https://picx.zhimg.com/v2-bdeb30bcab773ef7c9e16cf38b6dc991_r.jpg</figcaption></figure><ul><li><strong>data-original-token</strong>（无水印）</li></ul><figure><imgsrc="https://picx.zhimg.com/v2-af2b3d4381fcb4a20897760d38482cde.jpg"alt="https://picx.zhimg.com/v2-af2b3d4381fcb4a20897760d38482cde.jpg" /><figcaptionaria-hidden="true">https://picx.zhimg.com/v2-af2b3d4381fcb4a20897760d38482cde.jpg</figcaption></figure>]]></content>
     
     
       
