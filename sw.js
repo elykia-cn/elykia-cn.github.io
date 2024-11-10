@@ -97,17 +97,6 @@ const postMessage = async (type, data, ...goals) => {
                 }
             };
 const isFetchSuccessful = (response) => [200, 301, 302, 307, 308].includes(response.status);
-const transferError2Response = (err) => new Response(JSON.stringify({
-                type: err.name,
-                message: err.message,
-                stack: err.stack,
-                addition: err
-            }), {
-                status: 600,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
 const fetchWrapper = (request, banCache, cors, optional) => {
                 const init = {
                     referrerPolicy: request.referrerPolicy ?? '',
@@ -142,7 +131,7 @@ const fetchFastest = async (list, optional) => {
                 }
                 catch (err) {
                     const value = err.errors[0];
-                    return value.body ? value : transferError2Response(err);
+                    return value.body ? value : new Response(err.toString(), { status: -1 });
                 }
             };
 const fetchStandby = async (request, standbyRequests, optional) => {
@@ -189,14 +178,14 @@ const fetchStandby = async (request, standbyRequests, optional) => {
                 }
                 catch (err) {
                     const value = err.errors[0];
-                    return value.body ? value : transferError2Response(err);
+                    return value.body ? value : new Response(err.toString(), { status: -1 });
                 }
             };
 const fetchFile = (request, optional) => {
                         // @ts-ignore
                         if (!request.url)
                             request = new Request(request);
-                        return fetchWrapper(request, true, true, optional).catch(transferError2Response);
+                        return fetchWrapper(request, true, true, optional);
                     };
 const isBlockRequest = () => false;
 const modifyRequest = () => null;
