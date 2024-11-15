@@ -81,7 +81,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2024-11-16 00:04:23',
+  postUpdate: '2024-11-16 00:26:56',
   postMainColor: '',
 }</script><noscript><style type="text/css">
   #nav {
@@ -381,7 +381,7 @@ IP地址
 <p>此页面如果未能获取到信息并不代表无法读取上述信息，以实际情况为准。此页面获取地址信息展示使用的是<a
 target="_blank" rel="noopener" href="https://api.76.al">青桔</a>提供的API。</p>
 <script src="https://registry.npmmirror.com/elykia/latest/files/privacy.js"></script>
-<script src="https://cdn.cbd.int/ua-parser-js@latest/dist/ua-parser.min.js"></script>
+<script src="https://registry.npmmirror.com/ua-parser-js/latest/files/dist/ua-parser.min.js"></script>
 <h2
 id="二在评论时如何收集和使用你的个人信息">二、在评论时如何收集和使用你的个人信息</h2>
 <p>评论使用的是无登陆系统的匿名评论系统，你可以自愿填写真实的、或者虚假的信息作为你评论的展示信息。</p>
@@ -565,7 +565,7 @@ queueMicrotask(() => {
     twikoo.init(Object.assign({
       el: '#twikoo-wrap',
       envId: 'https://twikoo.elykia.cn/',
-      region: '',
+      region: 'ap-shanghai',
       onCommentLoaded: () => {
         anzhiyu.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
       }
@@ -574,7 +574,7 @@ queueMicrotask(() => {
 
   const loadTwikoo = () => {
     if (typeof twikoo === 'object') setTimeout(runFn,0)
-    else getScript('https://s4.zstatic.net/ajax/libs/twikoo/1.6.39/twikoo.all.min.js').then(runFn)
+    else getScript('https://registry.npmmirror.com/twikoo/1.6.39/files/dist/twikoo.all.min.js').then(runFn)
   }
 
   const getCount = () => {
@@ -582,7 +582,7 @@ queueMicrotask(() => {
     if(!countELement) return
     twikoo.getCommentsCount({
       envId: 'https://twikoo.elykia.cn/',
-      region: '',
+      region: 'ap-shanghai',
       urls: [window.location.pathname],
       includeReply: false
     }).then(res => {
@@ -624,7 +624,7 @@ queueMicrotask(() => {
     const runTwikoo = () => {
       twikoo.getRecentComments({
         envId: 'https://twikoo.elykia.cn/',
-        region: '',
+        region: 'ap-shanghai',
         pageSize: 6,
         includeReply: true
       }).then(function (res) {
@@ -649,7 +649,7 @@ queueMicrotask(() => {
     if (typeof twikoo === 'object') {
       runTwikoo()
     } else {
-      getScript('https://s4.zstatic.net/ajax/libs/twikoo/1.6.39/twikoo.all.min.js').then(runTwikoo)
+      getScript('https://registry.npmmirror.com/twikoo/1.6.39/files/dist/twikoo.all.min.js').then(runTwikoo)
     }
   }
 
