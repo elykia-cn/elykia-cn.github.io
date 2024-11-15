@@ -6,7 +6,7 @@
   <link href="https://blog.elykia.cn/atom.xml" rel="self"/>
   
   <link href="https://blog.elykia.cn/"/>
-  <updated>2024-10-28T15:43:15.122Z</updated>
+  <updated>2024-11-15T13:17:48.426Z</updated>
   <id>https://blog.elykia.cn/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Hexo教程(一) 基本文件结构</title>
+    <link href="https://blog.elykia.cn/posts/18.html"/>
+    <id>https://blog.elykia.cn/posts/18.html</id>
+    <published>2024-11-15T13:11:00.000Z</published>
+    <updated>2024-11-15T13:17:48.426Z</updated>
+    
+    <content type="html"><![CDATA[<p>本篇是主要Hexo的基本文件结构介绍。以下是本篇的核心内容：</p><hr /><h4 id="基本文件结构">基本文件结构</h4><p>在成功运行 Hexo 后，使用命令 <code>hexo s</code> 或<code>hexo d</code>，你会在博客文件夹中看到如下文件结构：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">- _config.yml</span><br><span class="line">- <span class="built_in">source</span>/</span><br><span class="line">    |--- _posts/</span><br><span class="line">    |--- _data/</span><br><span class="line">    |--- drafts/</span><br><span class="line">    |--- about/</span><br><span class="line">    |--- other folders</span><br><span class="line">- themes/</span><br><span class="line">    |--- one or more theme folders, <span class="keyword">in</span> each folder</span><br><span class="line">         |--- _config.yml</span><br><span class="line">         |--- languages/</span><br><span class="line">              |--- yaml files</span><br><span class="line">         |--- layout/</span><br><span class="line">              |--- (_partial/)</span><br><span class="line">              |--- (_widget/)</span><br><span class="line">              |--- layout.ejs</span><br><span class="line">              |--- index.ejs</span><br><span class="line">              |--- post.ejs</span><br><span class="line">              |--- other ejs files</span><br><span class="line">         |--- <span class="built_in">source</span>/</span><br><span class="line">              |--- css/</span><br><span class="line">              |--- js/</span><br><span class="line">              |--- libs/</span><br><span class="line">              |--- medias/</span><br><span class="line">         |--- Others</span><br><span class="line">- package-lock.json</span><br><span class="line">- package.json</span><br><span class="line">- scaffolds/</span><br><span class="line">    |--- several markdown files</span><br><span class="line">- public/</span><br><span class="line">- node_modules/</span><br><span class="line">- db.json</span><br></pre></td></tr></table></figure><h4 id="重要的文件与文件夹">重要的文件与文件夹：</h4><ol type="1"><li><p><strong>两个 <code>config.yml</code> 文件</strong>：</p><p>在DIY自己的网站时，配置文件的修改是第一步。Hexo作为静态网站生成器，主要有两个<code>_config.yml</code>文件，分别用于全局配置和主题配置。这里将它们称为“大config”和“小config”，便于区分。</p><ul><li><strong>大 <code>config.yml</code></strong>：位于项目根目录下，如<code>_config.yml</code>。这是整个网站的全局配置文件，涵盖了网站的基本设置，包括标题、描述、URL样式（permalink）等。同时，这里也指定了要使用的主题。你只需要将<code>theme:</code> 属性设置为 <code>themes/</code>文件夹下你希望使用的主题文件夹名即可。</li><li><strong>小 <code>config.yml</code></strong>：位于<code>themes/</code> 文件夹下，和每个主题的文件夹对应，如<code>_config.anzhiyu.yml</code>。小config是针对某一特定主题的设置，每个主题可能包含不同的配置项。具体如何配置，你可以参考对应主题的官方文档。</li></ul></li><li><p><strong>source 文件夹</strong>：</p><p><code>source</code>文件夹是进行网站内容创作的地方，主要用于博客文章的写作与更新。该文件夹包含以下几个子目录：</p><ul><li>**_posts/**：存放发布的文章文件。Hexo支持Markdown格式，文章将在博客上显示。</li><li><strong>drafts/</strong>：草稿文件夹，存放未发布的文章。默认情况下，Hexo不会渲染草稿文件，这个文件夹主要用于文章创作的中间状态。</li><li>**_data/**：用于存放一些不直接显示在文章里的数据，且可能需要在多个地方复用的内容。例如，友情链接、社交媒体信息等，可以通过<code>site.data.filename</code> 来调用这些数据。</li><li><strong>categories/</strong>、<strong>tags/</strong>、<strong>404/</strong>等文件夹，分别用来存放类别页面、标签页面和404错误页面的内容。这些文件夹与相应的CSS、EJS文件匹配，用于定制页面的显示。</li></ul></li><li><p><strong>themes 文件夹</strong>：</p><p><code>source</code>文件夹是进行网站内容创作的地方，主要用于博客文章的写作与更新。该文件夹包含以下几个子目录：</p><ul><li><strong>小config文件</strong>：与当前主题相关的配置，如启用某些主题特性或功能。</li><li><strong>languages/</strong>：存储翻译文件，用于更改网站的显示语言。</li><li><strong>layout/</strong>：一系列EJS模板文件，定义了网站的结构、功能以及如何呈现内容。常见的文件夹如：<ul><li><code>layout/_partial/</code>：存放网站共享模块（如页眉、页脚）。</li><li><code>layout/_layouts/</code>：存放整个页面的框架，定义页面的整体结构。</li></ul></li><li><strong>source/</strong>：包含主题的CSS样式、图片、Logo等资源文件。此处也是添加额外功能库的地方，如集成Gitalk评论插件、Echarts图表等。</li></ul></li><li><p><strong>其他文件夹</strong>：</p><p>除了上面提到的主要文件夹，Hexo项目中还有一些其他文件夹，通常不需要频繁修改，除非你需要进行更深入的定制：</p><ul><li><strong>scaffolds/</strong>：存放默认的文章模板文件。</li><li><strong>public/</strong>：通过 <code>hexo clean</code> 和<code>hexo generate</code>命令生成的静态文件，最终会被发布到Web服务器。</li></ul></li></ol><hr /><h4 id="引用">引用</h4><ol type="1"><li><ahref="https://www.youtube.com/watch?v=Jiwbmyc4nCA&amp;list=PLLAZ4kZ9dFpOMJR6D25ishrSedvsguVSm&amp;index=6">YouTubeHexo系列视频</a></li><li><a href="https://hexo.io/zh-cn/docs/data-files.html">Hexodata文件夹</a></li><li><a href="https://github.com/gitalk/gitalk/">gitalk</a></li><li><a href="https://echarts.apache.org/zh/index.html">echarts</a></li><li><ahref="https://github.com/qianguyihao/Web">Github：前端入门到进阶图文教程</a></li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;本篇是主要Hexo的基本文件结构介绍。以下是本篇的核心内容：&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h4 id=&quot;基本文件结构&quot;&gt;基本文件结构&lt;/h4&gt;
+&lt;p&gt;在成功运行 Hexo 后，使用命令 &lt;code&gt;hexo s&lt;/code&gt; 或
+&lt;code&gt;hexo d&lt;/code&gt;，</summary>
+      
+    
+    
+    
+    <category term="编程开发" scheme="https://blog.elykia.cn/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/"/>
+    
+    
+    <category term="Hexo" scheme="https://blog.elykia.cn/tags/Hexo/"/>
+    
+  </entry>
   
   <entry>
     <title>知乎图片去水印下载的方法</title>
