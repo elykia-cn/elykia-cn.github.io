@@ -5,48 +5,49 @@ const INVALID_KEY = 'X-Swpp-Invalid';
 const STORAGE_TIMESTAMP = 'X-Swpp-Time';
 const UPDATE_JSON_URL = 'swpp/update.json';
 const UPDATE_CD = 600000;
+const isFetchSuccessful = (response) => [200, 301, 302, 307, 308].includes(response.status);
 const matchCacheRule = (_url) => false;
 const normalizeUrl = (url) => {
-                    if (url.endsWith('/index.html'))
-                        return url.substring(0, url.length - 10);
-                    if (url.endsWith('.html'))
-                        return url.substring(0, url.length - 5);
-                    else
-                        return url;
-                };
+                if (url.endsWith('/index.html'))
+                    return url.substring(0, url.length - 10);
+                if (url.endsWith('.html'))
+                    return url.substring(0, url.length - 5);
+                else
+                    return url;
+            };
 const matchUpdateRule = (exp) => {
-                    /**
-                     * 遍历所有value
-                     * @param action 接受value并返回bool的函数
-                     * @return 如果 value 只有一个则返回 `action(value)`，否则返回所有运算的或运算（带短路）
-                     */
-                    const forEachValues = (action) => {
-                        const value = exp.value;
-                        if (Array.isArray(value)) {
-                            for (let it of value) {
-                                if (action(it))
-                                    return true;
-                            }
-                            return false;
+                /**
+                 * 遍历所有value
+                 * @param action 接受value并返回bool的函数
+                 * @return 如果 value 只有一个则返回 `action(value)`，否则返回所有运算的或运算（带短路）
+                 */
+                const forEachValues = (action) => {
+                    const value = exp.value;
+                    if (Array.isArray(value)) {
+                        for (let it of value) {
+                            if (action(it))
+                                return true;
                         }
-                        else
-                            return action(value);
-                    };
-                    switch (exp.flag) {
-                        case 'html':
-                            return url => /\/$|\.html$/.test(url);
-                        case 'suf':
-                            return url => forEachValues(value => url.endsWith(value));
-                        case 'pre':
-                            return url => forEachValues(value => url.startsWith(value));
-                        case 'str':
-                            return url => forEachValues(value => url.includes(value));
-                        case 'reg':
-                            return url => forEachValues(value => new RegExp(value, 'i').test(url));
-                        default:
-                            throw exp;
+                        return false;
                     }
+                    else
+                        return action(value);
                 };
+                switch (exp.flag) {
+                    case 'html':
+                        return url => /\/$|\.html$/.test(url);
+                    case 'suf':
+                        return url => forEachValues(value => url.endsWith(value));
+                    case 'pre':
+                        return url => forEachValues(value => url.startsWith(value));
+                    case 'str':
+                        return url => forEachValues(value => url.includes(value));
+                    case 'reg':
+                        return url => forEachValues(value => new RegExp(value, 'i').test(url));
+                    default:
+                        throw exp;
+                }
+            };
 const matchFromCaches = (request) => caches.match(request, { cacheName: CACHE_NAME });
 const writeResponseToCache = async (request, response, date) => {
                 if (date) {
@@ -96,7 +97,17 @@ const postMessage = async (type, data, ...goals) => {
                     client.postMessage(body);
                 }
             };
-const isFetchSuccessful = (response) => [200, 301, 302, 307, 308].includes(response.status);
+const transferError2Response = (err) => new Response(JSON.stringify({
+                type: err.name,
+                message: err.message,
+                stack: err.stack,
+                addition: err
+            }), {
+                status: 599,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
 const fetchWrapper = (request, banCache, cors, optional) => {
                 const init = {
                     referrerPolicy: request.referrerPolicy ?? '',
@@ -131,7 +142,7 @@ const fetchFastest = async (list, optional) => {
                 }
                 catch (err) {
                     const value = err.errors[0];
-                    return value.body ? value : new Response(err.toString(), { status: -1 });
+                    return value.body ? value : transferError2Response(err);
                 }
             };
 const fetchStandby = async (request, standbyRequests, optional) => {
@@ -178,14 +189,14 @@ const fetchStandby = async (request, standbyRequests, optional) => {
                 }
                 catch (err) {
                     const value = err.errors[0];
-                    return value.body ? value : new Response(err.toString(), { status: -1 });
+                    return value.body ? value : transferError2Response(err);
                 }
             };
 const fetchFile = (request, optional) => {
                         // @ts-ignore
                         if (!request.url)
                             request = new Request(request);
-                        return fetchWrapper(request, true, true, optional);
+                        return fetchWrapper(request, true, true, optional).catch(transferError2Response);
                     };
 const isBlockRequest = () => false;
 const modifyRequest = () => null;
