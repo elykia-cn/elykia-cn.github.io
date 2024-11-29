@@ -6,7 +6,7 @@
   <link href="https://blog.elykia.cn/atom.xml" rel="self"/>
   
   <link href="https://blog.elykia.cn/"/>
-  <updated>2024-11-15T14:38:05.035Z</updated>
+  <updated>2024-11-29T05:45:25.733Z</updated>
   <id>https://blog.elykia.cn/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Hexo教程(三) Web前端“三剑客”</title>
+    <link href="https://blog.elykia.cn/posts/20.html"/>
+    <id>https://blog.elykia.cn/posts/20.html</id>
+    <published>2024-11-29T05:43:07.000Z</published>
+    <updated>2024-11-29T05:45:25.733Z</updated>
+    
+    <content type="html"><![CDATA[<p>本篇是主要Hexo的基本文件结构介绍。以下是本篇的核心内容：</p><hr /><p>作为Web开发的初学者，我在接触时，面临了一个庞大的知识体系，初时感到有些困惑。但通过学习，我发现Web前端的开发其实可以分为几大核心技术，它们共同作用，帮助我们实现动态、精美、互动的网站。</p><p>这三大技术即Web前端的“三剑客”：HTML、CSS和JavaScript，它们各自负责不同的职能。这里将详细介绍它们的作用和基础概念，帮助你入门。</p><p>如果你有进一步学习的需求，我也推荐一些有用的学习资源：</p><ul><li><strong>GitHub</strong>：<ahref="https://github.com/qianguyihao/Web">前端入门到进阶图文教程</a></li><li><strong>YouTube</strong>：<ahref="https://www.youtube.com/watch?v=W6NZfCO5SIk">JavaScript in 1Hour</a></li><li><strong>YouTube</strong>：<ahref="https://www.youtube.com/watch?v=qz0aGYrrlhU&amp;t=7s">Learn HTMLin 1 Hour</a></li><li><strong>YouTube</strong>：<ahref="https://www.youtube.com/watch?v=TlB_eWDSMt4">Node.js in 1Hour</a></li></ul><h3 id="html超文本标记语言">1. HTML（超文本标记语言）</h3><p><strong>HTML</strong>（HyperText MarkupLanguage）是网页的骨架，它通过一系列的标记元素来定义网页内容和结构。通过HTML，我们告诉浏览器如何显示文本、图片、链接、表单等页面元素。</p><h4 id="主要概念">主要概念：</h4><ul><li><strong>HyperText（超文本）</strong>：超越文本的限制，支持在网页中嵌入图片、音频、视频等多媒体内容。</li><li><strong>Markup（标记）</strong>：标记语言，用于描述网页元素。比如：<code>&lt;h1&gt;</code>定义标题，<code>&lt;a&gt;</code>定义链接，<code>&lt;img&gt;</code>定义图片。</li></ul><h4 id="基本标签">基本标签：</h4><ul><li><code>&lt;html&gt;</code>：网页的根元素。</li><li><code>&lt;head&gt;</code>：包含页面的元数据，如标题、字符编码等。</li><li><code>&lt;body&gt;</code>：页面的主体，包含页面展示的内容。</li><li><code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code>,…<code>&lt;h6&gt;</code>：标题标签，表示内容的层级。</li><li><code>&lt;p&gt;</code>：段落标签，用于定义文本段落。</li><li><code>&lt;a&gt;</code>：锚点标签，用于创建超链接。</li><li><code>&lt;img&gt;</code>：图像标签，用于显示图片。</li></ul><p>HTML是构建网页的基础，掌握它意味着你能够创建网页的结构和内容。</p><h3 id="css层叠样式表">2. CSS（层叠样式表）</h3><p><strong>CSS</strong>（Cascading StyleSheets）负责网页内容的样式化。它通过定义字体、颜色、大小、布局等属性，来使HTML元素美观、整洁并符合设计要求。</p><h4 id="主要概念-1">主要概念：</h4><ul><li><strong>选择器</strong>：用于选中HTML元素，可以是标签、类名、id等。</li><li><strong>属性</strong>：定义样式的具体规则，如颜色、字体、尺寸、布局等。</li><li><strong>层叠性</strong>：当多个CSS规则作用于同一元素时，优先级较高的规则会覆盖较低的规则。</li></ul><h4 id="基本用法">基本用法：</h4><ul><li>通过<code>background-color</code>设置背景颜色，<code>color</code>设置文字颜色，<code>font-size</code>设置字体大小等。</li><li><strong>盒模型</strong>（BoxModel）：每个HTML元素在浏览器中都可以看作一个盒子，它包括内容区、内边距（padding）、边框（border）和外边距（margin）。</li></ul><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">body</span> &#123;</span><br><span class="line">    <span class="attribute">font-family</span>: Arial, sans-serif;</span><br><span class="line">    <span class="attribute">background-color</span>: <span class="number">#f4f4f4</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">h1</span> &#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#333</span>;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">2em</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">    <span class="attribute">margin</span>: <span class="number">10px</span>;</span><br><span class="line">    <span class="attribute">line-height</span>: <span class="number">1.6</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>掌握CSS后，你可以美化网页，调整页面布局，实现响应式设计等。</p><h3 id="javascript脚本语言">3. JavaScript（脚本语言）</h3><p><strong>JavaScript</strong>（JS）是一种编程语言，用于为网页添加动态行为和交互功能。它使网页能够响应用户的操作，进行数据处理、显示动画、控制浏览器行为等。</p><h4 id="主要概念-2">主要概念：</h4><ul><li><strong>ECMAScript</strong>：JavaScript的语法标准，定义了语言的基本结构，如变量声明、控制结构（<code>if</code>、<code>for</code>等）、函数等。</li><li><strong>DOM</strong>（Document ObjectModel）：文档对象模型，JavaScript通过DOM操作页面上的元素，实现动态效果。</li><li><strong>BOM</strong>（Browser ObjectModel）：浏览器对象模型，允许JavaScript与浏览器本身交互，如控制浏览器窗口、获取用户输入等。</li></ul><h4 id="基本用法-1">基本用法：</h4><p>JavaScript通过DOM操作HTML元素，动态改变网页内容或响应用户行为。比如，点击按钮时弹出提示框：</p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">onclick</span>=<span class="string">&quot;alert(&#x27;Hello, World!&#x27;)&quot;</span>&gt;</span>Click Me<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure><p>JavaScript还广泛用于数据交互，如AJAX请求，它能在不重新加载页面的情况下向服务器请求数据并更新页面。</p><h3 id="现代前端技术与工具">4. 现代前端技术与工具</h3><p>随着前端技术的不断发展，单纯掌握HTML、CSS和JavaScript已经不足以满足复杂项目的需求。以下是一些常用的现代前端技术和工具：</p><ul><li><strong>前端框架与库</strong>：<ul><li><strong>React</strong>：一个用于构建用户界面的JavaScript库，广泛应用于开发单页面应用（SPA）。</li><li><strong>Vue.js</strong>：另一个轻量级的前端框架，易于上手并提供强大的功能。</li><li><strong>Angular</strong>：一个全栈的前端框架，适合构建大型复杂应用。</li></ul></li><li><strong>CSS预处理器</strong>：<ul><li><strong>Sass</strong>：一种CSS预处理器，它扩展了CSS的功能，支持变量、嵌套规则、混入（mixins）等。</li><li><strong>LESS</strong>：另一个CSS预处理器，类似于Sass。</li></ul></li><li><strong>模块化与打包工具</strong>：<ul><li><strong>Webpack</strong>：一个模块化打包工具，将所有资源文件（JavaScript、CSS、图片等）打包成一个或多个静态文件，便于部署和管理。</li><li><strong>Babel</strong>：一个JavaScript编译器，可以将最新版本的JavaScript代码（ES6及以上）转换为兼容旧浏览器的代码。</li></ul></li><li><strong>版本控制与协作工具</strong>：<ul><li><strong>Git</strong>：一个分布式版本控制系统，用于跟踪代码的更改，协作开发。</li><li><strong>GitHub</strong>：一个代码托管平台，允许开发者存储、管理和分享代码。</li></ul></li></ul><h3 id="总结">总结</h3><p>Web前端的“三剑客”——HTML、CSS和JavaScript是构建网站的基石。HTML负责定义网页的结构，CSS负责控制网页的外观和布局，而JavaScript则赋予网页交互和动态功能。在掌握这三者的基础上，学习现代前端框架、工具和开发流程，将帮助你开发更加复杂和高效的Web应用。</p><p>通过不断学习和实践，你将逐步掌握前端开发的技巧，打造功能丰富、设计精美的网站。如果你对某个具体部分感兴趣，可以深入学习相关技术，也可以参考提供的学习资源进行进阶。</p><h3 id="引用">引用</h3><ol type="1"><li><ahref="https://github.com/qianguyihao/Web">Github：前端入门到进阶图文教程</a></li><li><a href="https://www.youtube.com/watch?v=W6NZfCO5SIk">YouTube:JavaScript in 1 hour</a></li><li><ahref="https://www.youtube.com/watch?v=qz0aGYrrlhU&amp;t=7s">YouTube:Learn HTML in 1 hour</a></li><li><a href="https://www.youtube.com/watch?v=TlB_eWDSMt4">YouTube:Node.js in 1 hour</a></li><li><a href="https://www.runoob.com/css/css-intro.html">CSS</a></li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;本篇是主要Hexo的基本文件结构介绍。以下是本篇的核心内容：&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;作为Web开发的初学者，我在接触时，面临了一个庞大的知识体系，初时感到有些困惑。但通过学习，我发现Web前端的开发其实可以分为几大核心技术，它们共同作用，帮助我们实现动态、精美、互</summary>
+      
+    
+    
+    
+    <category term="编程开发" scheme="https://blog.elykia.cn/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/"/>
+    
+    
+    <category term="Hexo" scheme="https://blog.elykia.cn/tags/Hexo/"/>
+    
+  </entry>
   
   <entry>
     <title>Hexo教程(二) 基本文件结构</title>
