@@ -96,7 +96,7 @@ if (document.querySelector(".comment-barrage")) {
               ${data.mailMd5 === commentBarrageConfig.mailMd5 ? "博主" : "热评"}
             </a>
             <div class="barrageNick">${data.nick}</div>
-            <img class="nolazyload barrageAvatar" src="https://cravatar.cn/avatar/${data.mailMd5}"/>
+            <img class="nolazyload barrageAvatar" src="https://weavatar.com/avatar/${data.mailMd5}"/>
             <a class="comment-barrage-close" href="javascript:anzhiyu.switchCommentBarrage()"><i class="anzhiyufont anzhiyu-icon-xmark"></i></a>
           </div>
           <anzhiyu class="barrageContent" onClick="window.location.hash = '${data.id}'">
