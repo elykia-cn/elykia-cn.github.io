@@ -6,7 +6,7 @@
   <link href="https://blog.elykia.cn/atom.xml" rel="self"/>
   
   <link href="https://blog.elykia.cn/"/>
-  <updated>2024-12-14T09:19:15.641Z</updated>
+  <updated>2025-01-16T14:33:25.575Z</updated>
   <id>https://blog.elykia.cn/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>郑州大学宿舍电量监控：ZZU-Dorm-Electricity-Balance</title>
+    <link href="https://blog.elykia.cn/posts/22.html"/>
+    <id>https://blog.elykia.cn/posts/22.html</id>
+    <published>2025-01-16T13:22:06.000Z</published>
+    <updated>2025-01-16T14:33:25.575Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="碎碎念">碎碎念</h2><p>终于考完了期末考试，这段时间真是因考试忙得不可开交，根本没时间更新博客。前几天，晚上11点宿舍突然因为欠费停电，而逆天郑州大学移动校园平台晚上又无法充值电费，只能等到白天处理。这次半夜断电的事件让我深刻意识到，自动化查询和预警的必要性。于是，我决定写一个工具来监测电费余额，提前预警，避免再次遇到这种尴尬的情况。</p><h2 id="研发过程">研发过程</h2><p>我在 GitHub 上看到了 <ahref="https://github.com/TorCroft">TorCroft</a> 学长的 <ahref="https://github.com/TorCroft/ZZU-Electricity">ZZU-Electricity</a>项目，但可惜大佬已经毕业，项目不再维护。而且项目中内置的 <ahref="https://github.com/TorCroft/ZZU-API">ZZU-API</a>也由于年代久远，无人维护，经常报错。正当我一筹莫展时，看到了 <ahref="https://github.com/Illustar0">Illustar0</a> 同学的 <ahref="https://github.com/Illustar0/ZZU.Py">ZZU.Py</a>项目，它封装了郑州大学移动校园 APP 的API，更加高效简洁。于是，我尝试将原项目中的 <ahref="https://github.com/TorCroft/ZZU-API">ZZU-API</a> 替换为 <ahref="https://github.com/Illustar0/ZZU.Py">ZZU.Py</a>，最终取得了很好的效果。除此之外，我还仿照<ahref="https://github.com/TorCroft/ZZU-Electricity">ZZU-Electricity</a>的监控逻辑，完善了展示网页，并将通知方式改为通过 Server 酱和 Telegram发送通知，最终完成了本项目<ahref="https://github.com/elykia-cn/ZZU-Dorm-Electricity-Balance">elykia-cn/ZZU-Dorm-Electricity-Balance:郑州大学宿舍用电记录</a>，达到了我的目的。</p><div calss='anzhiyu-tag-link'><a class="tag-Link" target="_blank" href="https://github.com/elykia-cn/ZZU-Dorm-Electricity-Balance">    <div class="tag-link-tips">引用站外地址</div>    <div class="tag-link-bottom">        <div class="tag-link-left" style="">          <i class="anzhiyufont anzhiyu-icon-link" style=""></i>        </div>        <div class="tag-link-right">            <div class="tag-link-title">项目地址</div>            <div class="tag-link-sitename">Elykia</div>        </div>        <i class="anzhiyufont anzhiyu-icon-angle-right"></i>    </div>    </a></div><div calss='anzhiyu-tag-link'><a class="tag-Link" target="_blank" href="https://elykia-cn.github.io/ZZU-Dorm-Electricity-Balance/">    <div class="tag-link-tips">引用站外地址</div>    <div class="tag-link-bottom">        <div class="tag-link-left" style="">          <i class="anzhiyufont anzhiyu-icon-link" style=""></i>        </div>        <div class="tag-link-right">            <div class="tag-link-title">演示网站</div>            <div class="tag-link-sitename">Elykia</div>        </div>        <i class="anzhiyufont anzhiyu-icon-angle-right"></i>    </div>    </a></div><h2 id="项目介绍">项目介绍</h2><h3 id="核心功能">核心功能</h3><ol type="1"><li><strong>实时电量监控</strong>：通过 <ahref="https://github.com/Illustar0/ZZU.Py">ZZU.Py</a>实时获取宿舍电量余额，监控照明和空调设备的用电情况。</li><li><strong>智能提醒</strong>：当电量低于设定阈值时，自动通过 Server酱和 Telegram 发送通知，确保用户及时充值。</li><li><strong>历史记录</strong>：记录每月电量使用数据，支持查看和分析历史用电情况，帮助用户更好地管理电量。</li><li><strong>多平台通知</strong>：支持 Server 酱和 Telegram两种通知方式，满足不同用户的需求。</li></ol><h3 id="技术亮点">技术亮点</h3><ul><li>基于 <a href="https://github.com/Illustar0/ZZU.Py">ZZU.Py</a>实现高效、稳定的电量数据获取。</li><li>结合 <ahref="https://github.com/TorCroft/ZZU-Electricity">ZZU-Electricity</a>的监控逻辑，实现电量余额的实时监控与提醒。</li><li>支持Server 酱和 Telegram等多平台通知，确保用户不会错过重要提醒。</li></ul><h2 id="功能">功能</h2><ul><li>每隔一段时间获取宿舍照明和空调的电量余额。</li><li>自动判断电量状态，并根据设定的阈值（默认为5.0）发送警告通知。</li><li>通过 Server 酱和 Telegram 通知宿舍住户电量状态。</li><li>提供一个简单的前端页面，显示电量数据和图表。</li></ul><h2 id="技术栈">技术栈</h2><ul><li><strong>Python</strong>：主要用于数据采集、处理和发送通知。</li><li><strong>ZZUPy</strong>：郑州大学移动校园的 Python API 封装。</li><li><strong>Telegram Bot API</strong>：通过 Telegram 发送通知。</li><li><strong>Server 酱</strong>：通过 Server 酱发送通知。</li><li><strong>ECharts</strong>：用于前端展示电量数据图表。</li><li><strong>GitHubActions</strong>：用于自动化构建和部署，自动检查更新并部署到 GitHubPages。</li></ul><h2 id="配置">配置</h2><ol type="1"><li><strong>Repository Secrets</strong>：需要在GitHubSecrets中添加以下变量：</li></ol><table><thead><tr class="header"><th>环境变量</th><th>描述</th></tr></thead><tbody><tr class="odd"><td><code>EMAIL</code></td><td>GitHub邮箱</td></tr><tr class="even"><td><code>ACCOUNT</code></td><td>郑州大学移动校园登录账户</td></tr><tr class="odd"><td><code>PASSWORD</code></td><td>郑州大学移动校园登录密码</td></tr><tr class="even"><td><code>lt_room</code></td><td>照明电量账户</td></tr><tr class="odd"><td><code>ac_room</code></td><td>空调电量账户</td></tr><tr class="even"><td><code>TELEGRAM_BOT_TOKEN</code></td><td>Telegram Bot Token</td></tr><tr class="odd"><td><code>TELEGRAM_CHAT_ID</code></td><td>Telegram Chat ID</td></tr><tr class="even"><td><code>SERVERCHAN_KEY</code></td><td>Server 酱 API 密钥</td></tr><tr class="odd"><td><code>SERVERCHAN_KEY2</code></td><td>多个Server 酱 API 密钥</td></tr><tr class="even"><td><code>SERVERCHAN_KEY3</code></td><td>多个Server 酱 API 密钥</td></tr></tbody></table><ol start="2" type="1"><li><strong>创建数据存储文件夹</strong>：该项目会将数据保存在<code>./page/data</code> 文件夹下，请确保该文件夹存在。</li></ol><h2 id="自动化工作流">自动化工作流</h2><p>该项目使用 GitHub Actions 进行自动化管理。工作流触发时会：</p><ul><li><strong>定时触发</strong>：工作流通过 <code>cron</code> 表达式每天在北京时间 12:00、15:00、18:00、21:00、24:00 自动运行。</li><li><strong>手动触发</strong>：也可以通过 GitHub界面手动触发工作流执行。</li></ul><h3 id="工作流步骤">工作流步骤</h3><ol type="1"><li><strong>Checkout</strong>：通过 <code>actions/checkout@v4</code>拉取项目代码，默认深度为 2，以便获取历史提交记录。</li><li><strong>设置 Python 3.12 环境</strong>：使用<code>actions/setup-python@v5</code> 设置 Python 3.12 环境。</li><li><strong>安装依赖</strong>：安装项目的 Python 依赖，确保<code>requirements.txt</code> 文件存在时自动安装。</li><li><strong>执行 Python 脚本</strong>：运行 <code>index.py</code> 和<code>markdown.py</code> 脚本，生成更新并将输出添加到 GitHub Actions的步骤摘要中。</li><li><strong>检查更改</strong>：检查项目代码是否发生了变化。</li><li><strong>获取最后一次提交信息</strong>：获取最近的一次提交信息，避免不必要的提交。</li><li><strong>提交更改</strong>：如果代码有变化，提交并推送更改。如果提交信息以“Updated at” 开头，则执行强制推送。</li><li><strong>设置 GitHub Pages</strong>：如果有更新，将网站内容上传至GitHub Pages。</li><li><strong>上传构建的页面</strong>：将页面内容打包并上传，以供部署。</li><li><strong>部署到 GitHubPages</strong>：如果构建步骤成功，自动将页面部署到 GitHubPages，确保每次更新都会自动发布。</li></ol><h2 id="示例通知">示例通知</h2><ul><li><p><strong>电量充足</strong>：<br />🏠宿舍电量通报🏠<br />💡 照明剩余电量：25.0 度（充足）<br />❄️ 空调剩余电量：50.0 度（充足）</p></li><li><p><strong>电量不足</strong>：<br />⚠️宿舍电量预警⚠️<br />💡 照明剩余电量：4.5 度（⚠️警告）<br />❄️ 空调剩余电量：3.0 度（⚠️警告）<br />⚠️ 电量不足，请尽快充电！</p></li></ul><h2 id="常见问题">常见问题</h2><h3 id="登录失败怎么办">1. 登录失败怎么办？</h3><p>请确保您提供的账号和密码正确，并且 <code>ZZUPy</code> 的 API接口正常工作。如果仍然无法登录，请检查网络连接或参考 <ahref="https://illustar0.github.io/ZZU.Py/"><code>ZZUPy</code>的文档</a>)。</p><h3 id="telegram-通知无法发送">2. Telegram 通知无法发送？</h3><p>请确保您设置了正确的 Telegram Bot Token 和 Chat ID，并且 Telegram Bot有权向该 Chat ID 发送消息。</p><h3 id="server-酱-通知无法发送">3. Server 酱 通知无法发送？</h3><p>因 Server 酱 每日发送数量的限制较为严格，仅为5条/天，故设置为只有<strong>电量不足</strong> 预警时才会发送消息，Telegram Bot无此限制，每次运行 GitHub Actions 都会发送电量消息。</p><h3 id="数据没有更新">4. 数据没有更新？</h3><p>请确保程序能正常读取 <code>./page/data</code> 文件夹中的 JSON文件。如果该文件夹没有数据，请先运行程序获取初始数据。</p><h2 id="结语">结语</h2><p>希望 <strong>ZZU-Dorm-Electricity-Balance</strong>能为同学们的校园生活带来便利。本人也是<strong>门外汉</strong>，非计算机相关专业，代码可能非常简陋，欢迎提交Issue 或 Pull Request。如果你有任何建议或问题，欢迎在 GitHub 上提交Issue 或 Pull Request。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;碎碎念&quot;&gt;碎碎念&lt;/h2&gt;
+&lt;p&gt;终于考完了期末考试，这段时间真是因考试忙得不可开交，根本没时间更新博客。前几天，晚上11点宿舍突然因为欠费停电，而逆天郑州大学移动校园平台晚上又无法充值电费，只能等到白天处理。这次半夜断电的事件让我深刻意识到，自动化查询和预警的</summary>
+      
+    
+    
+    
+    <category term="编程开发" scheme="https://blog.elykia.cn/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/"/>
+    
+    
+    <category term="ZZU" scheme="https://blog.elykia.cn/tags/ZZU/"/>
+    
+    <category term="郑州大学" scheme="https://blog.elykia.cn/tags/%E9%83%91%E5%B7%9E%E5%A4%A7%E5%AD%A6/"/>
+    
+  </entry>
   
   <entry>
     <title>Hexo教程(四) Layout详解：从原理到应用</title>
@@ -596,31 +623,6 @@ title</summary>
     <category term="Typora" scheme="https://blog.elykia.cn/tags/Typora/"/>
     
     <category term="Markdown" scheme="https://blog.elykia.cn/tags/Markdown/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="https://blog.elykia.cn/posts/2.html"/>
-    <id>https://blog.elykia.cn/posts/2.html</id>
-    <published>2023-08-06T16:02:07.000Z</published>
-    <updated>2024-11-30T02:31:48.538Z</updated>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your veryfirst post. Check <a href="https://hexo.io/docs/">documentation</a> formore info. If you get any problems when using Hexo, you can find theanswer in <ahref="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> oryou can ask me on <ahref="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="quick-start">Quick Start</h2><h3 id="create-a-new-post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure><p>More info: <ahref="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="run-server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="generate-static-files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <ahref="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="deploy-to-remote-sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <ahref="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very
-first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt; fo</summary>
-      
-    
-    
-    
-    <category term="编程开发" scheme="https://blog.elykia.cn/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/"/>
-    
-    
-    <category term="Hexo" scheme="https://blog.elykia.cn/tags/Hexo/"/>
     
   </entry>
   
