@@ -1,4 +1,5 @@
 (() => {const CACHE_NAME = 'kmarBlogCache';
+const INFINITE_CACHE = Symbol();
 const VERSION_PATH = 'https://id.v3/';
 const ESCAPE = 0;
 const INVALID_KEY = 'X-Swpp-Invalid';
@@ -72,13 +73,14 @@ const isValidCache = (response, rule) => {
                 const headers = response.headers;
                 if (headers.has(INVALID_KEY))
                     return false;
-                if (rule < 0)
+                if (rule === INFINITE_CACHE)
                     return true;
                 const storage = headers.get(STORAGE_TIMESTAMP);
                 if (!storage)
                     return true;
                 const storageDate = new Date(storage).getTime();
                 const nowTimestamp = Date.now();
+                // @ts-ignore
                 return nowTimestamp - storageDate < rule;
             };
 const readVersion = () => matchFromCaches(VERSION_PATH)
@@ -156,14 +158,14 @@ const fetchStandby = async (request, standbyRequests, optional) => {
                 let id, standbyResolve, standbyReject;
                 // 尝试封装 response
                 const resolveResponse = (index, response) => isFetchSuccessful(response) ? { i: index, r: response } : Promise.reject(response);
-                const { t: time, l: listGetter } = standbyRequests;
+                const { t: time, r: src, l: listGetter } = standbyRequests;
                 const controllers = new Array(listGetter.length + 1);
                 // 尝试同时拉取 standbyRequests 中的所有 Request
                 const task = () => Promise.any(listGetter().map((it, index) => fallbackFetch(it, controllers[index + 1] = new AbortController())
                     .then(response => resolveResponse(index + 1, response)))).then(obj => standbyResolve(obj))
                     .catch(() => standbyReject());
                 // 尝试拉取初始 request
-                const firstFetch = fallbackFetch(request, controllers[0] = new AbortController())
+                const firstFetch = fallbackFetch(src || request, controllers[0] = new AbortController())
                     .then(response => resolveResponse(0, response))
                     .catch(err => {
                     // 如果失败则跳过等待
