@@ -3,7 +3,7 @@
                 
             const controller = navigator.serviceWorker?.controller
             if (!controller) return
-            const postMessage2Sw = (type) => navigator.serviceWorker.controller.postMessage(type);
+            const postMessage2Sw = (type) => navigator.serviceWorker.controller.postMessage({ type });
 const pjaxUpdate = (url) => {
                 const type = url.endsWith('js') ? 'script' : 'link';
                 const name = type === 'link' ? 'href' : 'src';
@@ -46,9 +46,7 @@ const messageEvent = (event) => {
                 }
             };
             _inlineA()
-            navigator.serviceWorker.addEventListener('message', event => {
-                messageEvent()
-            })
+            navigator.serviceWorker.addEventListener('message', messageEvent)
         
             })
         
