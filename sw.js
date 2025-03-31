@@ -1,28 +1,13 @@
-(() => {const CACHE_NAME = 'BlogCache';
+(() => {const CACHE_NAME = 'kmarBlogCache';
 const INFINITE_CACHE = Symbol();
 const VERSION_PATH = 'https://id.v3/';
-const ESCAPE = 15;
+const ESCAPE = 0;
 const INVALID_KEY = 'X-Swpp-Invalid';
 const STORAGE_TIMESTAMP = 'X-Swpp-Time';
 const UPDATE_JSON_URL = 'swpp/update.json';
 const UPDATE_CD = 600000;
 const isFetchSuccessful = (response) => [200, 301, 302, 307, 308].includes(response.status);
-const matchCacheRule = (url) => {
-        let { host, pathname } = url;
-
-        // 处理省略index.html的情况
-        if (pathname.endsWith('/')) pathname += 'index.html';
-
-        // 仅仅对于blog.elykia.cn 处理 html 和 json
-        if (host.endsWith('blog.elykia.cn')) {
-          if (pathname.endsWith('.json')) return 3600000; // 1 hour
-          if (pathname.endsWith('.html')) return false; // 暂不缓存
-          if (pathname.endsWith('.webp') || pathname.endsWith('.jpg') || pathname.endsWith('.png')) return 43200000; // 12 hours
-        }
-        if (/\.(js|css|woff2|woff|ttf|cur)$/.test(url.pathname)) return 172800000; // 2 days
-
-        // return ((url.host.endsWith('blog.elykia.cn') && /(\/|\.json)$/.test(url.pathname)) || /\.(js|css|woff2|woff|ttf|cur)$/.test(url.pathname)) ? 86400000 : false
-      };
+const matchCacheRule = (_url) => false;
 const normalizeUrl = (url) => {
                 if (url.endsWith('/index.html'))
                     return url.substring(0, url.length - 10);
@@ -139,28 +124,7 @@ const fetchWrapper = (request, banCache, cors, optional) => {
             };
 const isCors = () => false;
 const getFastestRequests = null;
-const getStandbyRequests = (request) => {
-      const srcUrl = request.url;
-      const { host, pathname } = new URL(srcUrl);
-      // noinspection SpellCheckingInspection
-      const commonCdnList = ['jsd.example.com', 'cdn.jsdmirror.com', 'fastly.jsdelivr.net'];
-      // noinspection SpellCheckingInspection
-      const elme = 'npm.elemecdn.com';
-      const urlMapper = (it) => new Request(it, request);
-      if (host === elme) {
-        return {
-          t: 2000,
-          l: () => [...commonCdnList.map((it) => `https://${it}/npm${pathname}`)].map(urlMapper)
-        };
-      }
-      if (host === 'jsd.example.com') {
-        commonCdnList.splice(0, 1);
-        return {
-          t: 2000,
-          l: () => [...commonCdnList.map((it) => `https://${it}${pathname}`)].map(urlMapper)
-        };
-      }
-    };
+const getStandbyRequests = null;
 const fetchFastest = async (list, optional) => {
                 const fallbackFetch = (request, controller) => {
                     return fetchWrapper(request, true, true, {
@@ -230,14 +194,12 @@ const fetchStandby = async (request, standbyRequests, optional) => {
                     return value.body ? value : transferError2Response(err);
                 }
             };
-const fetchFile = (requestOrUrl, optional) => {
-    // @ts-ignore
-    const request = requestOrUrl.url ? requestOrUrl : new Request(requestOrUrl);
-    const standbyList = getStandbyRequests(request);
-    if (standbyList)
-        return fetchStandby(request, standbyList, optional);
-    return fetchWrapper(request, true, isCors(request), optional).catch(transferError2Response);
-};
+const fetchFile = (request, optional) => {
+                        // @ts-ignore
+                        if (!request.url)
+                            request = new Request(request);
+                        return fetchWrapper(request, true, true, optional).catch(transferError2Response);
+                    };
 const isBlockRequest = () => false;
 const modifyRequest = () => null;
 const handleEscape = async () => {
