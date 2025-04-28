@@ -6,7 +6,7 @@
   <link href="https://blog.elykia.cn/atom.xml" rel="self"/>
   
   <link href="https://blog.elykia.cn/"/>
-  <updated>2025-01-17T09:33:30.167Z</updated>
+  <updated>2025-04-28T10:32:43.443Z</updated>
   <id>https://blog.elykia.cn/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Twikoo 在多吉云CDN场景下获取访客真实IP的解决方案</title>
+    <link href="https://blog.elykia.cn/posts/24.html"/>
+    <id>https://blog.elykia.cn/posts/24.html</id>
+    <published>2025-04-28T10:30:15.000Z</published>
+    <updated>2025-04-28T10:32:43.443Z</updated>
+    
+    <content type="html"><![CDATA[<p>这是去年遇到的问题了，虽然当时很快解决了，但一直没时间水一篇文章，就这么拖到了现在。今天终于抽空，把这个小坑记录一下。</p><h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><p>部署 Twikoo 评论系统后，加了 CDN（多吉云），想着加速一下访问速度，结果评论里的用户 IP 地址不对了，显示的是 CDN 节点的 IP。<br>排查后发现，问题出在<strong>CDN 转发时，后端拿到的是节点 IP，而不是访客真实 IP</strong>。</p><h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>当时我在Github上提了一个 <a href="https://github.com/twikoojs/twikoo/issues/769">issue</a> ，很快得到了作者 <a href="https://github.com/imaegoo">imaegoo</a> 大佬的回复指导，解决过程也很简单，总结下来：</p><p>🔹 CDN 通常会把访客真实 IP 加到一个请求头里，比如 <code>X-Forwarded-For</code>。</p><p>🔹 只需要告诉 Twikoo 从正确的请求头里取 IP 就行了。</p><p>比如：</p><ul><li><p>腾讯云 EdgeOne 的访客 IP 放在 <code>EO-Client-IP</code>，配置：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TWIKOO_IP_HEADERS=[&quot;headers.eo-client-ip&quot;]</span><br></pre></td></tr></table></figure></li><li><p>而我用的是 <strong>多吉云</strong>，默认是 <code>X-Forwarded-For</code>，所以配置成：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TWIKOO_IP_HEADERS=[&quot;headers.x-forwarded-for&quot;]</span><br></pre></td></tr></table></figure></li></ul><p>⚠️ 注意：格式是 <code>&quot;headers.x-forwarded-for&quot;</code>，不是 <code>&quot;X-Forwarded-For&quot;</code>！</p><h2 id="添加环境变量"><a href="#添加环境变量" class="headerlink" title="添加环境变量"></a>添加环境变量</h2><p>如果你的 Twikoo 是通过 1Panel 部署的，可以按下面步骤添加环境变量，其他的大概也类似：</p><ol><li><p>打开 1Panel 面板，进入 <strong>容器</strong>。</p></li><li><p>找到你的 <strong>twikoo 容器</strong>，点击<strong>编辑</strong>。</p></li><li><p>滑到页面最下方，找到 <strong>环境变量</strong> 部分。</p></li><li><p>添加一条新的环境变量：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TWIKOO_IP_HEADERS=[&quot;headers.x-forwarded-for&quot;]</span><br></pre></td></tr></table></figure></li></ol><ul><li><p><strong>键（Key）</strong>：<code>TWIKOO_IP_HEADERS</code></p></li><li><p><strong>值（Value）</strong>：<code>[&quot;headers.x-forwarded-for&quot;]</code></p></li></ul><ol start="5"><li>保存并重启容器，配置就生效了！</li></ol><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul><li>配了 CDN 后，不用担心评论 IP 问题，只要设置好 IP 透传头就行了。</li><li>不同的 CDN 提供的请求头可能不同，记得对照文档确认一下。</li><li>小坑一枚，迟来的水文一篇，希望能帮到有缘人！</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;这是去年遇到的问题了，虽然当时很快解决了，但一直没时间水一篇文章，就这么拖到了现在。今天终于抽空，把这个小坑记录一下。&lt;/p&gt;
+&lt;h2 id=&quot;遇到的问题&quot;&gt;&lt;a href=&quot;#遇到的问题&quot; class=&quot;headerlink&quot; title=&quot;遇到的问题&quot;&gt;&lt;/a&gt;遇到的问</summary>
+      
+    
+    
+    
+    <category term="编程开发" scheme="https://blog.elykia.cn/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/"/>
+    
+    
+    <category term="问题" scheme="https://blog.elykia.cn/tags/%E9%97%AE%E9%A2%98/"/>
+    
+    <category term="CDN" scheme="https://blog.elykia.cn/tags/CDN/"/>
+    
+    <category term="1panel" scheme="https://blog.elykia.cn/tags/1panel/"/>
+    
+    <category term="Twikoo" scheme="https://blog.elykia.cn/tags/Twikoo/"/>
+    
+  </entry>
   
   <entry>
     <title>1panel自定义博客的404页面</title>
@@ -552,35 +583,6 @@
     <category term="Typora" scheme="https://blog.elykia.cn/tags/Typora/"/>
     
     <category term="Markdown" scheme="https://blog.elykia.cn/tags/Markdown/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HEXO 更新记录</title>
-    <link href="https://blog.elykia.cn/posts/4.html"/>
-    <id>https://blog.elykia.cn/posts/4.html</id>
-    <published>2023-12-02T07:36:59.000Z</published>
-    <updated>2024-08-28T14:04:43.466Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="一、自动更新"><a href="#一、自动更新" class="headerlink" title="一、自动更新"></a>一、自动更新</h3><ul><li>更新插件和Hexo版本</li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm update</span><br></pre></td></tr></table></figure><ul><li>查看当前版本号</li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo version</span><br></pre></td></tr></table></figure><h3 id="二、手动更新"><a href="#二、手动更新" class="headerlink" title="二、手动更新"></a>二、手动更新</h3><ul><li>检查插件更新</li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm outdated</span><br></pre></td></tr></table></figure><p>运行后可以检查Hexo和插件的最新版本</p><ul><li><p>更改版本文件</p><p>修改根目录的package.json文件，将对应插件名称所对应的版本号更改为要更新的版本号。</p></li><li><p>开始更新</p></li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save</span><br></pre></td></tr></table></figure><ul><li>查看当前版本号</li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo version</span><br></pre></td></tr></table></figure><h3 id="三、npm依赖最新检测工具"><a href="#三、npm依赖最新检测工具" class="headerlink" title="三、npm依赖最新检测工具"></a>三、npm依赖最新检测工具</h3><ul><li>安装依赖工具</li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g npm-check-updates</span><br></pre></td></tr></table></figure><ul><li>检查是否安装成功</li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ncu -v</span><br></pre></td></tr></table></figure><ul><li>检查项目依赖的最新版本</li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ncu</span><br></pre></td></tr></table></figure><p>npm-check-updates &#x2F;&#x2F; 检查当前项目中有没有哪些依赖包可更新（简写ncu）</p><ul><li>一键更新package.json 中所有依赖到最新版本</li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ncu -u // 全部更新package.json</span><br></pre></td></tr></table></figure><ul><li>注意上面命令是更新 package.json ，真正的依赖包还没有下载下来，所以需要删除 node_modules 重新 install</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save</span><br></pre></td></tr></table></figure><ul><li>顺手升级一下 CLI</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-cli -g</span><br></pre></td></tr></table></figure><ul><li>检查一下版本信息</li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo version</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h3 id=&quot;一、自动更新&quot;&gt;&lt;a href=&quot;#一、自动更新&quot; class=&quot;headerlink&quot; title=&quot;一、自动更新&quot;&gt;&lt;/a&gt;一、自动更新&lt;/h3&gt;&lt;ul&gt;
-&lt;li&gt;更新插件和Hexo版本&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure class=&quot;highlight </summary>
-      
-    
-    
-    
-    <category term="编程开发" scheme="https://blog.elykia.cn/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/"/>
-    
-    
-    <category term="更新" scheme="https://blog.elykia.cn/tags/%E6%9B%B4%E6%96%B0/"/>
-    
-    <category term="Hexo" scheme="https://blog.elykia.cn/tags/Hexo/"/>
     
   </entry>
   
