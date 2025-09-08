@@ -154,10 +154,9 @@ function fetchRandomPost() {
       fetch(fetchUrl)
         .then(res => res.json())
         .then(json => {
-          var post = json[0]; // 数组取第一个对象
-          var title = post.title;
-          var link = post.link;
-          var author = post.author;
+          var title = json[0].title;
+          var link = json[0].link;
+          var author = json[0].author;
           if (document.getElementById("random-post")) {
             window.setTimeout(function () {
               document.getElementById("random-post").innerHTML =
