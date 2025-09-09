@@ -6,7 +6,7 @@
   <link href="https://blog.elykia.cn/atom.xml" rel="self"/>
   
   <link href="https://blog.elykia.cn/"/>
-  <updated>2025-04-28T10:32:43.443Z</updated>
+  <updated>2025-09-09T15:46:19.563Z</updated>
   <id>https://blog.elykia.cn/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>安知鱼主题：记一次鱼塘朋友圈钓鱼报错的修复</title>
+    <link href="https://blog.elykia.cn/posts/25.html"/>
+    <id>https://blog.elykia.cn/posts/25.html</id>
+    <published>2025-09-09T15:46:00.000Z</published>
+    <updated>2025-09-09T15:46:19.563Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;​	前段时间，Hexo-Circle-of-Friends 项目恢复了更新</summary>
+      
+    
+    
+    
+    <category term="编程开发" scheme="https://blog.elykia.cn/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/"/>
+    
+    
+    <category term="问题" scheme="https://blog.elykia.cn/tags/%E9%97%AE%E9%A2%98/"/>
+    
+    <category term="安知鱼" scheme="https://blog.elykia.cn/tags/%E5%AE%89%E7%9F%A5%E9%B1%BC/"/>
+    
+    <category term="Hexo" scheme="https://blog.elykia.cn/tags/Hexo/"/>
+    
+  </entry>
   
   <entry>
     <title>Twikoo 在多吉云CDN场景下获取访客真实IP的解决方案</title>
@@ -211,7 +237,7 @@
     <link href="https://blog.elykia.cn/posts/16.html"/>
     <id>https://blog.elykia.cn/posts/16.html</id>
     <published>2024-10-24T16:34:14.000Z</published>
-    <updated>2024-11-29T14:51:09.954Z</updated>
+    <updated>2025-09-09T15:44:59.232Z</updated>
     
     
       
@@ -226,6 +252,8 @@
     
     
     <category term="魔改" scheme="https://blog.elykia.cn/tags/%E9%AD%94%E6%94%B9/"/>
+    
+    <category term="安知鱼" scheme="https://blog.elykia.cn/tags/%E5%AE%89%E7%9F%A5%E9%B1%BC/"/>
     
     <category term="Hexo" scheme="https://blog.elykia.cn/tags/Hexo/"/>
     
