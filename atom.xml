@@ -34,9 +34,9 @@
     <category term="编程开发" scheme="https://blog.elykia.cn/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/"/>
     
     
-    <category term="问题" scheme="https://blog.elykia.cn/tags/%E9%97%AE%E9%A2%98/"/>
-    
     <category term="Hexo" scheme="https://blog.elykia.cn/tags/Hexo/"/>
+    
+    <category term="问题" scheme="https://blog.elykia.cn/tags/%E9%97%AE%E9%A2%98/"/>
     
     <category term="安知鱼" scheme="https://blog.elykia.cn/tags/%E5%AE%89%E7%9F%A5%E9%B1%BC/"/>
     
@@ -437,15 +437,15 @@
     <category term="编程开发" scheme="https://blog.elykia.cn/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/"/>
     
     
-    <category term="报错" scheme="https://blog.elykia.cn/tags/%E6%8A%A5%E9%94%99/"/>
-    
-    <category term="问题" scheme="https://blog.elykia.cn/tags/%E9%97%AE%E9%A2%98/"/>
-    
     <category term="Hexo" scheme="https://blog.elykia.cn/tags/Hexo/"/>
     
     <category term="优化" scheme="https://blog.elykia.cn/tags/%E4%BC%98%E5%8C%96/"/>
     
     <category term="twikoo" scheme="https://blog.elykia.cn/tags/twikoo/"/>
+    
+    <category term="报错" scheme="https://blog.elykia.cn/tags/%E6%8A%A5%E9%94%99/"/>
+    
+    <category term="问题" scheme="https://blog.elykia.cn/tags/%E9%97%AE%E9%A2%98/"/>
     
   </entry>
   
@@ -519,11 +519,11 @@
     
     <category term="Hexo" scheme="https://blog.elykia.cn/tags/Hexo/"/>
     
+    <category term="1panel" scheme="https://blog.elykia.cn/tags/1panel/"/>
+    
     <category term="服务器" scheme="https://blog.elykia.cn/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
     
     <category term="Debian" scheme="https://blog.elykia.cn/tags/Debian/"/>
-    
-    <category term="1panel" scheme="https://blog.elykia.cn/tags/1panel/"/>
     
   </entry>
   
